@@ -134,11 +134,11 @@ class DungeonState(UI):
         if dungeon.is_Simulated_Universe:
             limit = 80
         elif dungeon.is_Cavern_of_Corrosion:
-            limit = 80
+            limit = 120
         elif dungeon.is_Echo_of_War:
             limit = 30
         else:
-            limit = 60
+            limit = 120
 
         # Double event is not yet finished, do it today as possible
         diff = get_server_next_update('04:00') - now()
