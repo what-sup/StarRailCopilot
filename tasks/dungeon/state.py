@@ -160,7 +160,7 @@ class DungeonState(UI):
 
         # Recover 1 trailbaze power each 6 minutes
         current = self.config.stored.TrailblazePower.value
-        cover = max(limit - (current // 10 * 10), 0) * 6
+        cover = max(limit - current, 0) * 6
         future = now() + timedelta(minutes=cover)
         logger.info(f'Currently has {current} need {cover} minutes to reach {limit}')
 
