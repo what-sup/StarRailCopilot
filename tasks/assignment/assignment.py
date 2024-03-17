@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from module.logger import logger
 from tasks.assignment.claim import AssignmentClaim
@@ -11,9 +11,10 @@ from tasks.daily.synthesize import SynthesizeUI
 
 class Assignment(AssignmentClaim, SynthesizeUI):
     def run(self, assignments: list[AssignmentEntry] = None, duration: int = None, event_first: bool = None):
+        now = datetime.now()
         self.config.update_battle_pass_quests()
         self.config.update_daily_quests()
-
+        
         if assignments is None:
             assignments = (
                 getattr(self.config, f'Assignment_Name_{i + 1}', None) for i in range(4))
@@ -28,6 +29,10 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             duration = self.config.Assignment_Duration
         if event_first is None:
             event_first = self.config.Assignment_Event
+
+        configDuration = duration
+        if duration == 24: 
+            duration = 20
 
         self.dispatched = dict()
         self.has_new_dispatch = False
@@ -69,6 +74,8 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             # Delay self
             if len(self.dispatched):
                 delay = min(self.dispatched.values())
+                if configDuration == 24:
+                    delay = now + timedelta(hours=24)
                 logger.info(f'Delay assignment check to {str(delay)}')
                 self.config.task_delay(target=delay)
             else:

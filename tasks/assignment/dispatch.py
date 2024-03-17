@@ -68,7 +68,7 @@ class AssignmentDispatch(AssignmentUI):
             self._select_duration(duration)
         self._confirm_assignment()
         self._wait_until_assignment_started()
-        future = now() + timedelta(hours=(24 if duration==20 else duration))
+        future = now() + timedelta(hours=duration)
         logger.info(f'Assignment dispatched, will finish at {future}')
         self.dispatched[assignment] = future
         self.has_new_dispatch = True

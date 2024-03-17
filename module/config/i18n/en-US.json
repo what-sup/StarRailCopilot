@@ -863,7 +863,8 @@
       "4": "4 Hours",
       "8": "8 Hours",
       "12": "12 Hours",
-      "20": "20 Hours"
+      "20": "20 Hours",
+      "24": "20 Hours，delay task by 24 Hours"
     },
     "Event": {
       "name": "Complete Event Assignments First",
