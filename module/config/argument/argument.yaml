@@ -216,7 +216,7 @@ Assignment:
     option: [ ]
   Duration:
     value: 20
-    option: [ 4, 8, 12, 20 ]
+    option: [ 4, 8, 12, 20, 24 ]
   Event: true
   Assignment:
     stored: StoredAssignment
