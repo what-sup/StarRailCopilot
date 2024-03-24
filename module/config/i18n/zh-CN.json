@@ -22,6 +22,10 @@
       "name": "SRC设置",
       "help": ""
     },
+    "Login": {
+      "name": "Task.Login.name",
+      "help": "Task.Login.help"
+    },
     "Restart": {
       "name": "异常处理",
       "help": ""
@@ -61,6 +65,22 @@
     "Daemon": {
       "name": "剧情连点器",
       "help": ""
+    }
+  },
+  "AccountSwitch": {
+    "_info": {
+      "name": "AccountSwitch._info.name",
+      "help": "AccountSwitch._info.help"
+    },
+    "Enable": {
+      "name": "AccountSwitch.Enable.name",
+      "help": "AccountSwitch.Enable.help",
+      "True": "True",
+      "False": "False"
+    },
+    "AccountInfo": {
+      "name": "AccountSwitch.AccountInfo.name",
+      "help": "AccountSwitch.AccountInfo.help"
     }
   },
   "Scheduler": {
@@ -885,8 +905,7 @@
       "4": "4小时",
       "8": "8小时",
       "12": "12小时",
-      "20": "20小时",
-      "24": "20小时，任务延迟24小时"
+      "20": "20小时"
     },
     "Event": {
       "name": "有活动时优先做活动委托",

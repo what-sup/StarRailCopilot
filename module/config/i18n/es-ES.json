@@ -22,6 +22,10 @@
       "name": "Ajustes de SRC",
       "help": ""
     },
+    "Login": {
+      "name": "Task.Login.name",
+      "help": "Task.Login.help"
+    },
     "Restart": {
       "name": "Gestión de errores",
       "help": ""
@@ -61,6 +65,22 @@
     "Daemon": {
       "name": "Clic de diálogo",
       "help": ""
+    }
+  },
+  "AccountSwitch": {
+    "_info": {
+      "name": "AccountSwitch._info.name",
+      "help": "AccountSwitch._info.help"
+    },
+    "Enable": {
+      "name": "AccountSwitch.Enable.name",
+      "help": "AccountSwitch.Enable.help",
+      "True": "True",
+      "False": "False"
+    },
+    "AccountInfo": {
+      "name": "AccountSwitch.AccountInfo.name",
+      "help": "AccountSwitch.AccountInfo.help"
     }
   },
   "Scheduler": {
@@ -885,8 +905,7 @@
       "4": "4 horas",
       "8": "8 horas",
       "12": "12 horas",
-      "20": "20 horas",
-      "24": ""
+      "20": "20 horas"
     },
     "Event": {
       "name": "Assignment.Event.name",

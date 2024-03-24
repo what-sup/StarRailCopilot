@@ -14,6 +14,8 @@ Alas:
       - Error
       - Optimization
       - CloudStorage
+    Login:
+      - AccountSwitch
     Restart:
       - Scheduler
 

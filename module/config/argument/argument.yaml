@@ -4,6 +4,18 @@
 
 # ==================== Alas ====================
 
+AccountSwitch:
+  Enable:
+    type: checkbox
+    value: false
+    option: [ true, false ]
+  # NextRun: 2020-01-01 00:00:00
+  # ServerUpdate:
+  #   value: 04:00
+  #   display: hide
+  AccountInfo:
+    value: 123******89
+    valuetype: str
 Scheduler:
   Enable:
     type: checkbox

@@ -161,6 +161,23 @@
       }
     }
   },
+  "Login": {
+    "AccountSwitch": {
+      "Enable": {
+        "type": "checkbox",
+        "value": false,
+        "option": [
+          true,
+          false
+        ]
+      },
+      "AccountInfo": {
+        "type": "input",
+        "value": "123******89",
+        "valuetype": "str"
+      }
+    }
+  },
   "Restart": {
     "Scheduler": {
       "Enable": {
@@ -186,7 +203,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     }
   },
@@ -202,14 +219,6 @@
           true
         ]
       },
-      "RunType": {
-        "type": "select",
-        "value": "Runtype",
-        "option": [
-          "Auto",
-          "Timer"
-        ]
-      },
       "NextRun": {
         "type": "datetime",
         "value": "2020-01-01 00:00:00",
@@ -223,7 +232,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "Dungeon": {
@@ -534,7 +543,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "AchievableQuest": {
@@ -971,7 +980,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "BattlePassStorage": {
@@ -1058,7 +1067,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "Assignment": {
@@ -1169,8 +1178,7 @@
           4,
           8,
           12,
-          20,
-          24
+          20
         ]
       },
       "Event": {
@@ -1212,7 +1220,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "ItemStorage": {
@@ -1257,7 +1265,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "SupportReward": {
@@ -1290,7 +1298,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "Weekly": {
@@ -1407,7 +1415,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "show"
+        "display": "hide"
       }
     },
     "RogueWorld": {

@@ -9,11 +9,15 @@ class GeneratedConfig:
     Auto generated configuration
     """
 
+    # Group `AccountSwitch`
+    AccountSwitch_Enable = False  # True, False
+    AccountSwitch_AccountInfo = '123******89'
+
     # Group `Scheduler`
     Scheduler_Enable = False  # True, False
     Scheduler_NextRun = datetime.datetime(2020, 1, 1, 0, 0)
     Scheduler_Command = 'Alas'
-    Scheduler_ServerUpdate = '12:00'
+    Scheduler_ServerUpdate = '04:00'
 
     # Group `Emulator`
     Emulator_Serial = 'auto'

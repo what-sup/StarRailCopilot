@@ -22,6 +22,10 @@
       "name": "SRC Settings",
       "help": ""
     },
+    "Login": {
+      "name": "Task.Login.name",
+      "help": "Task.Login.help"
+    },
     "Restart": {
       "name": "Error Handling",
       "help": ""
@@ -61,6 +65,22 @@
     "Daemon": {
       "name": "Dialogue Clicker",
       "help": ""
+    }
+  },
+  "AccountSwitch": {
+    "_info": {
+      "name": "AccountSwitch._info.name",
+      "help": "AccountSwitch._info.help"
+    },
+    "Enable": {
+      "name": "AccountSwitch.Enable.name",
+      "help": "AccountSwitch.Enable.help",
+      "True": "True",
+      "False": "False"
+    },
+    "AccountInfo": {
+      "name": "AccountSwitch.AccountInfo.name",
+      "help": "AccountSwitch.AccountInfo.help"
     }
   },
   "Scheduler": {
@@ -885,8 +905,7 @@
       "4": "4 Hours",
       "8": "8 Hours",
       "12": "12 Hours",
-      "20": "20 Hours",
-      "24": "20 Hours，delay task by 24 Hours"
+      "20": "20 Hours"
     },
     "Event": {
       "name": "Complete Event Assignments First",
