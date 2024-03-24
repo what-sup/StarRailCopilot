@@ -27,6 +27,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         app_timer = Timer(5).start()
         login_success = False
         switch_account = deep_get(self.config.data, keys='Login.AccountSwitch.Enable')
+        account_info = deep_get(self.config.data, keys='Login.AccountSwitch.AccountInfo')
         switched = False
         
         while 1:
@@ -91,18 +92,18 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             
             # Choose account from account list
             if self.appear(LOGIN_CHOOSE_ACCOUNT):
-                if self.chooseAccount(deep_get(self.config.data, keys='Login.AccountSwitch.AccountInfo')):
-                    logger.info(f'Sucessfully changed account to {deep_get(self.config.data, keys='Login.AccountSwitch.AccountInfo')}')
+                if self.chooseAccount(account_info):
+                    logger.info(f'Sucessfully changed account to {account_info}')
                     switched = True
                     continue
                 else:
-                    logger.info(f'Failed to switch account to {self.config.AccountSwitch_AccountInfo}. Please check whether the account is in the account list')
+                    logger.info(f'Failed to switch account to {account_info}. Please check whether the account is in the account list')
                     continue
             
             # Click Login after choosing
             if self.appear(SWITCH_LOGIN) and switched:
                 if self.appear_then_click(SWITCH_LOGIN):
-                    logger.info(f'Login to {self.config.AccountSwitch_AccountInfo}')
+                    logger.info(f'Login to {account_info}')
                     continue
                 
             if self.appear_then_click(USER_AGREEMENT_ACCEPT):
