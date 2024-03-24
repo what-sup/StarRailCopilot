@@ -25,7 +25,7 @@ Scheduler:
   Command: Alas
   ServerUpdate:
     value: 04:00
-    display: hide
+    display: show
 Emulator:
   Serial:
     value: auto
