@@ -905,7 +905,8 @@
       "4": "4 horas",
       "8": "8 horas",
       "12": "12 horas",
-      "20": "20 horas"
+      "20": "20 horas",
+      "24": "24"
     },
     "Event": {
       "name": "Assignment.Event.name",

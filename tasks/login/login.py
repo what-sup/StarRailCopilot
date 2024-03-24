@@ -1,6 +1,7 @@
 from module.base.timer import Timer
 from module.exception import GameNotRunningError
 from module.logger import logger
+from module.config.utils import deep_get
 from tasks.base.page import page_main
 from tasks.base.ui import UI
 from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, LOGIN_CONFIRM, LOGIN_LOADING, LOGOUT_COMFIRM, SWITCH_LOGIN, USER_AGREEMENT_ACCEPT, LOGOUT_ACCOUNT_LOGOUT
@@ -25,7 +26,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         startup_timer = Timer(5).start()
         app_timer = Timer(5).start()
         login_success = False
-        switch_account = self.config.AccountSwitch_Enable
+        switch_account = deep_get(self.config.data, keys='Login.AccountSwitch.Enable')
         switched = False
         
         while 1:
@@ -59,7 +60,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                 orientation_timer.reset()
 
             # Login directly without switching an account
-            if self.appear(LOGIN_CONFIRM) and not switch_account:
+            if self.appear(LOGIN_CONFIRM) and (not switch_account):
                 if self.appear_then_click(LOGIN_CONFIRM):
                     login_success = True
                     continue
@@ -73,7 +74,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             # Click logout button to switch account
             if self.appear(LOGOUT_ACCOUNT_LOGOUT) and switch_account:
                 if self.appear_then_click(LOGOUT_ACCOUNT_LOGOUT):
-                    logger.info('Logout Button clicked');
+                    logger.info('Logout Button clicked')
                     continue
                 else:
                     logger.info('Failed to click logout Button')
@@ -90,8 +91,8 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             
             # Choose account from account list
             if self.appear(LOGIN_CHOOSE_ACCOUNT):
-                if self.chooseAccount(self.config.AccountSwitch_AccountInfo):
-                    logger.info(f'Sucessfully changed account to {self.config.AccountSwitch_AccountInfo}')
+                if self.chooseAccount(deep_get(self.config.data, keys='Login.AccountSwitch.AccountInfo')):
+                    logger.info(f'Sucessfully changed account to {deep_get(self.config.data, keys='Login.AccountSwitch.AccountInfo')}')
                     switched = True
                     continue
                 else:
