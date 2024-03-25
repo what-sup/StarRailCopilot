@@ -203,7 +203,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "hide"
+        "display": "show"
       }
     }
   },
