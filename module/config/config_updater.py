@@ -863,6 +863,8 @@ class ConfigUpdater:
             yield 'Rogue.RogueBlessing.CustomResonanceFilter'
         if deep_get(data, 'Rogue.RogueBlessing.PresetCurioFilter') != 'custom':
             yield 'Rogue.RogueBlessing.CustomCurioFilter'
+        if deep_get(data, 'Dungeon.DungeonMode.Mode') != 'timer':
+            yield 'Dungeon.DungeonMode.Delay'
 
     def get_hidden_args(self, data) -> t.Set[str]:
         """

@@ -11,7 +11,7 @@ from tasks.combat.assets.assets_combat_finish import COMBAT_EXIT
 from tasks.combat.assets.assets_combat_interact import MAP_LOADING
 from tasks.combat.assets.assets_combat_prepare import COMBAT_PREPARE
 from tasks.daily.assets.assets_daily_trial import INFO_CLOSE
-from tasks.login.assets.assets_login import LOGIN_CONFIRM
+from tasks.login.assets.assets_login import LOGIN_CONFIRM, LOGOUT_COMFIRM
 
 
 class UI(MainPage):
@@ -90,6 +90,9 @@ class UI(MainPage):
             if self.appear_then_click(LOGIN_CONFIRM, interval=5):
                 timeout.reset()
                 continue
+            if self.appear(LOGOUT_COMFIRM):
+                raise GameNotRunningError('Game not running')
+                # return
             if self.appear(MAP_LOADING, interval=5):
                 logger.info('Map loading')
                 timeout.reset()
