@@ -87,15 +87,6 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     login_success = True
                     continue
             
-            # Click logout button to switch account
-            if self.appear(LOGOUT_ACCOUNT_LOGOUT) and switch_account:
-                if self.appear_then_click(LOGOUT_ACCOUNT_LOGOUT):
-                    logger.info('Logout Button clicked')
-                    continue
-                else:
-                    logger.info('Failed to click logout Button')
-                    continue
-
             # Click logout comfirm button
             if self.appear(LOGOUT_COMFIRM) and switch_account:
                 if self.appear_then_click(LOGOUT_COMFIRM):
@@ -103,6 +94,15 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
                 else:
                     logger.info(f'Failed to click comfirm logout Button')
+                    continue
+            
+            # Click logout button to switch account
+            if self.appear(LOGOUT_ACCOUNT_LOGOUT) and switch_account:
+                if self.appear_then_click(LOGOUT_ACCOUNT_LOGOUT):
+                    logger.info('Logout Button clicked')
+                    continue
+                else:
+                    logger.info('Failed to click logout Button')
                     continue
             
             # Choose account from account list
