@@ -34,7 +34,8 @@
   "Login": {
     "AccountSwitch": {
       "Enable": false,
-      "AccountInfo": "123******89"
+      "AccountInfo": "123******89",
+      "GameId": 123456789
     }
   },
   "Restart": {
@@ -51,6 +52,10 @@
       "NextRun": "2020-01-01 00:00:00",
       "Command": "Dungeon",
       "ServerUpdate": "04:00"
+    },
+    "DungeonMode": {
+      "Mode": "auto",
+      "Delay": 12
     },
     "Dungeon": {
       "Name": "Calyx_Golden_Treasures",

@@ -4,6 +4,7 @@ from module.base.timer import Timer
 from module.exception import GameNotRunningError, GamePageUnknownError
 from module.logger import logger
 from module.ocr.ocr import Ocr
+from module.config.config import AzurLaneConfig
 from tasks.base.assets.assets_base_page import MAP_EXIT
 from tasks.base.main_page import MainPage
 from tasks.base.page import Page, page_main
@@ -11,7 +12,7 @@ from tasks.combat.assets.assets_combat_finish import COMBAT_EXIT
 from tasks.combat.assets.assets_combat_interact import MAP_LOADING
 from tasks.combat.assets.assets_combat_prepare import COMBAT_PREPARE
 from tasks.daily.assets.assets_daily_trial import INFO_CLOSE
-from tasks.login.assets.assets_login import LOGIN_CONFIRM
+from tasks.login.assets.assets_login import LOGIN_CONFIRM, LOGOUT_COMFIRM
 
 
 class UI(MainPage):
@@ -87,9 +88,11 @@ class UI(MainPage):
             if self.handle_popup_confirm():
                 timeout.reset()
                 continue
-            if self.appear_then_click(LOGIN_CONFIRM, interval=5):
+            if self.appear(LOGIN_CONFIRM, interval=5):
                 timeout.reset()
-                continue
+                raise GameNotRunningError('Game not running')
+            if self.appear(LOGOUT_COMFIRM):
+                raise GameNotRunningError('Game not running')
             if self.appear(MAP_LOADING, interval=5):
                 logger.info('Map loading')
                 timeout.reset()

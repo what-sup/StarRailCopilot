@@ -9,12 +9,11 @@ AccountSwitch:
     type: checkbox
     value: false
     option: [ true, false ]
-  # NextRun: 2020-01-01 00:00:00
-  # ServerUpdate:
-  #   value: 04:00
-  #   display: hide
   AccountInfo:
     value: 123******89
+    valuetype: str
+  GameId:
+    value: 123456789
     valuetype: str
 Scheduler:
   Enable:
@@ -97,6 +96,13 @@ CloudStorage:
 
 # ==================== Daily ====================
 
+DungeonMode:
+  Mode:
+    value: auto
+    option: [ auto, timer ]
+  Delay:
+    value: 12
+    valuetype: str
 Dungeon:
   Name:
     # Dungeon names will be injected in config updater

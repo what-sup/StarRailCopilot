@@ -3,6 +3,16 @@ from module.base.button import Button, ButtonWrapper
 # This file was auto-generated, do not modify it manually. To generate:
 # ``` python -m dev_tools.button_extract ```
 
+ACCOUNT_LIST = ButtonWrapper(
+    name='ACCOUNT_LIST',
+    share=Button(
+        file='./assets/share/login/ACCOUNT_LIST.png',
+        area=(484, 357, 837, 600),
+        search=(464, 337, 857, 620),
+        color=(255, 255, 255),
+        button=(484, 357, 837, 600),
+    ),
+)
 CURRENT_ACCOUNT = ButtonWrapper(
     name='CURRENT_ACCOUNT',
     share=Button(
@@ -11,6 +21,16 @@ CURRENT_ACCOUNT = ButtonWrapper(
         search=(464, 217, 876, 372),
         color=(250, 250, 250),
         button=(484, 237, 856, 352),
+    ),
+)
+GAME_INFO = ButtonWrapper(
+    name='GAME_INFO',
+    share=Button(
+        file='./assets/share/login/GAME_INFO.png',
+        area=(30, 690, 162, 706),
+        search=(10, 670, 182, 720),
+        color=(127, 131, 138),
+        button=(30, 690, 162, 706),
     ),
 )
 LOGIN_CHOOSE_ACCOUNT = ButtonWrapper(
@@ -31,16 +51,26 @@ LOGIN_CONFIRM = ButtonWrapper(
             area=(1188, 44, 1220, 74),
             search=(1168, 24, 1240, 94),
             color=(140, 124, 144),
-            button=(683, 327, 1143, 620),
+            button=(211, 151, 1046, 519),
         ),
         Button(
             file='./assets/share/login/LOGIN_CONFIRM.2.png',
             area=(1109, 48, 1139, 73),
             search=(1089, 28, 1159, 93),
             color=(149, 145, 164),
-            button=(683, 327, 1143, 620),
+            button=(211, 151, 1046, 519),
         ),
     ],
+)
+LOGIN_CURRENT_ACCOUNT = ButtonWrapper(
+    name='LOGIN_CURRENT_ACCOUNT',
+    share=Button(
+        file='./assets/share/login/LOGIN_CURRENT_ACCOUNT.png',
+        area=(541, 116, 737, 208),
+        search=(521, 96, 757, 228),
+        color=(206, 207, 207),
+        button=(541, 116, 737, 208),
+    ),
 )
 LOGIN_LOADING = ButtonWrapper(
     name='LOGIN_LOADING',
@@ -78,7 +108,7 @@ SWITCH_LOGIN = ButtonWrapper(
         file='./assets/share/login/SWITCH_LOGIN.png',
         area=(374, 396, 906, 479),
         search=(354, 376, 926, 499),
-        color=(249, 207, 125),
+        color=(250, 208, 125),
         button=(374, 396, 906, 479),
     ),
 )

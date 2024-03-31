@@ -171,9 +171,15 @@ class DungeonState(UI):
             future = next_monday
 
         tasks = ['Dungeon', 'Weekly']
-        with self.config.multi_set():
+
+        if self.config.cross_get(keys=f'Dungeon.DungeonMode.Mode', default='auto') == 'timer':
             for task in tasks:
-                next_run = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
-                if future > next_run:
-                    logger.info(f"Delay task `{task}` to {future}")
-                    self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
+                future = max(self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME), now()) + timedelta(minutes=self.config.cross_get(keys=f'{task}.DungeonMode.Delay', default='12') * 60)
+                self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
+        else:
+            with self.config.multi_set():
+                for task in tasks:
+                    next_run = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
+                    if future > next_run:
+                        logger.info(f"Delay task `{task}` to {future}")
+                        self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)

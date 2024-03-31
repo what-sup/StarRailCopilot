@@ -81,6 +81,10 @@
     "AccountInfo": {
       "name": "AccountSwitch.AccountInfo.name",
       "help": "AccountSwitch.AccountInfo.help"
+    },
+    "GameId": {
+      "name": "AccountSwitch.GameId.name",
+      "help": "AccountSwitch.GameId.help"
     }
   },
   "Scheduler": {
@@ -257,6 +261,22 @@
     "CloudRemainFree": {
       "name": "CloudStorage.CloudRemainFree.name",
       "help": "CloudStorage.CloudRemainFree.help"
+    }
+  },
+  "DungeonMode": {
+    "_info": {
+      "name": "DungeonMode._info.name",
+      "help": "DungeonMode._info.help"
+    },
+    "Mode": {
+      "name": "DungeonMode.Mode.name",
+      "help": "DungeonMode.Mode.help",
+      "auto": "auto",
+      "timer": "timer"
+    },
+    "Delay": {
+      "name": "DungeonMode.Delay.name",
+      "help": "DungeonMode.Delay.help"
     }
   },
   "Dungeon": {

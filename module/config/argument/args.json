@@ -175,6 +175,11 @@
         "type": "input",
         "value": "123******89",
         "valuetype": "str"
+      },
+      "GameId": {
+        "type": "input",
+        "value": 123456789,
+        "valuetype": "str"
       }
     }
   },
@@ -203,7 +208,7 @@
       "ServerUpdate": {
         "type": "input",
         "value": "04:00",
-        "display": "hide"
+        "display": "show"
       }
     }
   },
@@ -233,6 +238,21 @@
         "type": "input",
         "value": "04:00",
         "display": "show"
+      }
+    },
+    "DungeonMode": {
+      "Mode": {
+        "type": "select",
+        "value": "auto",
+        "option": [
+          "auto",
+          "timer"
+        ]
+      },
+      "Delay": {
+        "type": "input",
+        "value": 12,
+        "valuetype": "str"
       }
     },
     "Dungeon": {
