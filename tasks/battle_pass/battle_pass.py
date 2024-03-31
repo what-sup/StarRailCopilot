@@ -397,7 +397,7 @@ class BattlePassUI(UI):
 
     def run(self):
         if switchAccount.accountSwtich:
-            if not switchAccount.ensureAccount():
+            if not switchAccount.ensureAccount(self):
                 raise GameNotRunningError('Game not running')
             
         self.ui_ensure(page_main)

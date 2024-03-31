@@ -14,7 +14,7 @@ from tasks.login.ui import switchAccount
 class Assignment(AssignmentClaim, SynthesizeUI):
     def run(self, assignments: list[AssignmentEntry] = None, duration: int = None, event_first: bool = None):
         if switchAccount.accountSwtich:
-            if not switchAccount.ensureAccount():
+            if not switchAccount.ensureAccount(self):
                 raise GameNotRunningError('Game not running')
 
         now = datetime.now()

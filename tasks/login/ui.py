@@ -82,7 +82,7 @@ class switchAccount(UI):
         currentUID = Ocr(button=GAME_INFO)
         ocrTimeout = Timer(5, 1).start()
         while 1:
-            if expectUID in currentUID.ocr_single_line(self.device.image):
+            if str(expectUID) in currentUID.ocr_single_line(self.device.image):
                 return True
             if ocrTimeout.reached():
                 return False

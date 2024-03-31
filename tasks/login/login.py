@@ -76,19 +76,23 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
 
             # Click Login after choosing
-            if login.matched_single_line(image=self.device.image, keyword_classes=login_keyword) and switched:
+            if switched and not login_success and login.matched_single_line(image=self.device.image, keyword_classes=login_keyword):
                 if self.appear_then_click(SWITCH_LOGIN):
                     logger.info(f'Login to {account_info}')
+                    login_success = True
                     continue
             
             # Login after switching an account
             if self.appear(LOGIN_CONFIRM) and switch_account and switched:
                 if self.appear_then_click(LOGIN_CONFIRM):
-                    login_success = True
                     continue
+
+            # if self.appear(LOGIN_START) and switch_account and switched and login_success:
+            #     if self.appear_then_click(LOGIN_START):
+            #         logger.info('clicked LOGIN_START')
             
             # Click logout comfirm button
-            if self.appear(LOGOUT_COMFIRM) and switch_account:
+            if self.appear(LOGOUT_COMFIRM) and switch_account and not switched:
                 if self.appear_then_click(LOGOUT_COMFIRM):
                     logger.info(f'comfirm logout, start changing account')
                     continue
@@ -97,7 +101,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
             
             # Click logout button to switch account
-            if self.appear(LOGOUT_ACCOUNT_LOGOUT) and switch_account:
+            if self.appear(LOGOUT_ACCOUNT_LOGOUT) and switch_account and not switched:
                 if self.appear_then_click(LOGOUT_ACCOUNT_LOGOUT):
                     logger.info('Logout Button clicked')
                     continue
@@ -106,7 +110,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
             
             # Choose account from account list
-            if self.appear(LOGIN_CHOOSE_ACCOUNT):
+            if self.appear(LOGIN_CHOOSE_ACCOUNT) and not switched:
                 if self.chooseAccount(account_info):
                     logger.info(f'Sucessfully switch account to {account_info}')
                     switched = True

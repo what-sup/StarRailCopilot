@@ -125,7 +125,7 @@ class Ocr:
         # ocr
         result, _ = self.model.ocr_single_line(image)
         # after proces
-        result = self._log_change('after', self.after_process, result)
+        # result = self._log_change('after', self.after_process, result)
         result = self._log_change('format', self.format_result, result)
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
                     text=str(result))

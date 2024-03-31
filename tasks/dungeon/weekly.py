@@ -41,7 +41,7 @@ class WeeklyDungeon(Dungeon):
 
     def run(self):
         if switchAccount.accountSwtich:
-            if not switchAccount.ensureAccount():
+            if not switchAccount.ensureAccount(self):
                 raise GameNotRunningError('Game not running')
 
         # self.config.update_battle_pass_quests()

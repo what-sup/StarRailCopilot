@@ -27,10 +27,10 @@ GAME_INFO = ButtonWrapper(
     name='GAME_INFO',
     share=Button(
         file='./assets/share/login/GAME_INFO.png',
-        area=(30, 690, 147, 706),
-        search=(10, 670, 167, 720),
-        color=(114, 119, 127),
-        button=(30, 690, 147, 706),
+        area=(30, 690, 162, 706),
+        search=(10, 670, 182, 720),
+        color=(127, 131, 138),
+        button=(30, 690, 162, 706),
     ),
 )
 LOGIN_CHOOSE_ACCOUNT = ButtonWrapper(
@@ -51,14 +51,14 @@ LOGIN_CONFIRM = ButtonWrapper(
             area=(1188, 44, 1220, 74),
             search=(1168, 24, 1240, 94),
             color=(140, 124, 144),
-            button=(683, 327, 1143, 620),
+            button=(211, 151, 1046, 519),
         ),
         Button(
             file='./assets/share/login/LOGIN_CONFIRM.2.png',
             area=(1109, 48, 1139, 73),
             search=(1089, 28, 1159, 93),
             color=(149, 145, 164),
-            button=(683, 327, 1143, 620),
+            button=(211, 151, 1046, 519),
         ),
     ],
 )
