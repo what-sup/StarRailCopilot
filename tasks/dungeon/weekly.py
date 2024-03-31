@@ -1,10 +1,12 @@
 from module.logger import logger
 from module.ocr.ocr import DigitCounter
+from module.exception import GameNotRunningError
 from tasks.daily.keywords import KEYWORDS_DAILY_QUEST
 from tasks.dungeon.assets.assets_dungeon_ui import OCR_DUNGEON_LIST, OCR_WEEKLY_LIMIT
 from tasks.dungeon.dungeon import Dungeon
 from tasks.dungeon.keywords import DungeonList, KEYWORDS_DUNGEON_NAV, KEYWORDS_DUNGEON_TAB
 from tasks.dungeon.ui import DUNGEON_LIST
+from tasks.login.ui import switchAccount
 
 
 class WeeklyDungeon(Dungeon):
@@ -38,6 +40,10 @@ class WeeklyDungeon(Dungeon):
             return 0
 
     def run(self):
+        if switchAccount.accountSwtich:
+            if not switchAccount.ensureAccount():
+                raise GameNotRunningError('Game not running')
+
         # self.config.update_battle_pass_quests()
         self.config.update_daily_quests()
         self.called_daily_support = False

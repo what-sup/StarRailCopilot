@@ -4,13 +4,18 @@ from module.base.base import ModuleBase
 from tasks.base.ui import UI
 from module.base.timer import Timer
 from module.base.utils.utils import area_size, random_rectangle_vector_opted
+from module.config.utils import deep_get
 from module.logger import logger
 from module.ocr.ocr import Ocr, OcrResultButton
 from module.ocr.keyword import Keyword
 from module.ui.draggable_list import DraggableList
-from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, CURRENT_ACCOUNT, ACCOUNT_LIST, SWITCH_LOGIN
+from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, CURRENT_ACCOUNT, ACCOUNT_LIST, SWITCH_LOGIN, GAME_INFO
 
 class switchAccount(UI):
+
+    def accountSwtich(self):
+        return deep_get((self.config.data, 'Login.AccountSwitch.Enable', False)) if deep_get((self.config.data, 'Login.AccountSwitch.Enable', False)) != None else False
+
     def dragList(self):
         width, height = area_size(ACCOUNT_LIST.area)
         vector = (0.65, 0.65)
@@ -71,3 +76,13 @@ class switchAccount(UI):
             #     logger.info('Click LOGIN_CHOOSE_ACCOUNT button failed')
             #     continue
         return False
+    
+    def ensureAccount(self):
+        expectUID = deep_get(self.config.data, 'Login.AccountSwitch.GameId', None)
+        currentUID = Ocr(button=GAME_INFO)
+        ocrTimeout = Timer(5, 1).start()
+        while 1:
+            if expectUID in currentUID.ocr_single_line(self.device.image):
+                return True
+            if ocrTimeout.reached():
+                return False

@@ -9,6 +9,7 @@ from module.base.utils import get_color
 from module.config.stored.classes import StoredCounter
 from module.config.utils import get_server_next_update
 from module.logger.logger import logger
+from module.exception import GameNotRunningError
 from module.ocr.keyword import KeywordDigitCounter
 from module.ocr.ocr import Digit, DigitCounter, Duration, Ocr, OcrResultButton
 from module.ocr.utils import pair_buttons
@@ -19,6 +20,7 @@ from tasks.base.page import page_battle_pass, page_main
 from tasks.base.ui import UI
 from tasks.battle_pass.assets.assets_battle_pass import *
 from tasks.battle_pass.keywords import *
+from tasks.login.ui import switchAccount
 
 
 class BattlePassTab(Switch):
@@ -394,6 +396,10 @@ class BattlePassUI(UI):
         return False
 
     def run(self):
+        if switchAccount.accountSwtich:
+            if not switchAccount.ensureAccount():
+                raise GameNotRunningError('Game not running')
+            
         self.ui_ensure(page_main)
         if not self.has_battle_pass_entrance():
             self.config.stored.BattlePassWeeklyQuest.set(0)
