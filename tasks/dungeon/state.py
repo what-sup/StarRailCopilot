@@ -174,7 +174,9 @@ class DungeonState(UI):
 
         if self.config.cross_get(keys=f'Dungeon.DungeonMode.Mode', default='auto') == 'timer':
             for task in tasks:
-                future = max(self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME), now()) + timedelta(minutes=self.config.cross_get(keys=f'{task}.DungeonMode.Delay', default='12') * 60)
+                scheduleTime = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
+                interval = self.config.cross_get(keys=f'{task}.DungeonMode.Delay', default='12')
+                future = now() if now() - scheduleTime > timedelta(hours=interval) else scheduleTime + timedelta(hours=interval)
                 self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
         else:
             with self.config.multi_set():
