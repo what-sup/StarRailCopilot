@@ -173,11 +173,12 @@ class DraggableList:
                 break
 
             # Drag pages
-            if row_index < self.cur_min:
-                self.drag_page(self.reverse_direction(self.drag_direction), main=main)
-            elif self.cur_max < row_index:
-                self.drag_page(self.drag_direction, main=main)
-
+            # if row_index < self.cur_min:
+            #     self.drag_page(self.reverse_direction(self.drag_direction), main=main)
+            # elif self.cur_max < row_index:
+            #     self.drag_page(self.drag_direction, main=main)
+            self.drag_page(self.drag_direction, main=main)
+            
             # Wait for bottoming out
             main.wait_until_stable(self.search_button, timer=Timer(
                 0, count=0), timeout=Timer(1.5, count=5))
