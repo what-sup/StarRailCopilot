@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from module.config.utils import DEFAULT_TIME
 from module.logger import logger
 from module.exception import GameNotRunningError
 from tasks.assignment.claim import AssignmentClaim
@@ -17,7 +18,7 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             if not switchAccount.ensureAccount(self):
                 raise GameNotRunningError('Game not running')
 
-        now = datetime.now()
+        now = self.config.cross_get(keys=f'Assignment.Scheduler.NextRun', default=DEFAULT_TIME)
         self.config.update_battle_pass_quests()
         self.config.update_daily_quests()
         
