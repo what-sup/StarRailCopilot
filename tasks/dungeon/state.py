@@ -176,7 +176,7 @@ class DungeonState(UI):
             for task in tasks:
                 scheduleTime = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
                 interval = int(self.config.cross_get(keys=f'{task}.DungeonMode.Delay', default='12'))
-                future = now() if now() - scheduleTime > timedelta(hours=interval) else scheduleTime + timedelta(hours=interval)
+                future = now() if abs(now() - scheduleTime) > timedelta(hours=2 * interval) else scheduleTime + timedelta(hours=interval)
                 self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
         else:
             with self.config.multi_set():

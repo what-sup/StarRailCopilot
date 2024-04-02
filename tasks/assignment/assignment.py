@@ -18,7 +18,7 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             if not switchAccount.ensureAccount(self):
                 raise GameNotRunningError('Game not running')
 
-        now = self.config.cross_get(keys=f'Assignment.Scheduler.NextRun', default=DEFAULT_TIME)
+        scheduleTime = self.config.cross_get(keys=f'Assignment.Scheduler.NextRun', default=DEFAULT_TIME)
         self.config.update_battle_pass_quests()
         self.config.update_daily_quests()
         
@@ -82,7 +82,7 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             if len(self.dispatched):
                 delay = min(self.dispatched.values())
                 if configDuration == 24:
-                    delay = now + timedelta(hours=24)
+                    delay = datetime.now() if abs(datetime.now() - scheduleTime) > timedelta(hours=2 * configDuration) else scheduleTime + timedelta(hours=configDuration)
                 logger.info(f'Delay assignment check to {str(delay)}')
                 self.config.task_delay(target=delay)
             else:

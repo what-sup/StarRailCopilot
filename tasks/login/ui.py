@@ -14,7 +14,7 @@ from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, CURRENT_ACCOUN
 class switchAccount(UI):
 
     def accountSwtich(self):
-        return deep_get((self.config.data, 'Login.AccountSwitch.Enable', False)) if deep_get((self.config.data, 'Login.AccountSwitch.Enable', False)) != None else False
+        return deep_get((self.config.data, 'Login.AccountSwitch.Enable', False))
 
     def dragList(self):
         width, height = area_size(ACCOUNT_LIST.area)
@@ -56,7 +56,7 @@ class switchAccount(UI):
             return True
         switch = False
         while 1:
-            if self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT):
+            if not switch and self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT):
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
                 if self.accountInsight(row=accountInfo):
                     switch = True
@@ -64,10 +64,11 @@ class switchAccount(UI):
             if not self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT) and switch:
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
 
-            if self.appear(SWITCH_LOGIN):
-                if currentAccount.ocr_single_line(self.device.image) == accountInfo:
-                    return True
-                # return False
+            if currentAccount.ocr_single_line(self.device.image) == accountInfo:
+                return True
+            else:
+                return False
+            # return False
 
             # if self.appear_then_click(LOGIN_CHOOSE_ACCOUNT):
             #     logger.info('LOGIN_CHOOSE_ACCOUNT clicked')

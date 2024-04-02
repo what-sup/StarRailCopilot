@@ -55,6 +55,7 @@ class DraggableList:
         self.cur_min = 1
         self.cur_max = 1
         self.cur_buttons: list[OcrResultButton] = []
+        self.cur_indexs: list[int] = []
 
     def __str__(self):
         return f'DraggableList({self.name})'
@@ -94,6 +95,7 @@ class DraggableList:
         indexes = [self.keyword2index(row.matched_keyword)
                    for row in self.cur_buttons]
         indexes = [index for index in indexes if index]
+        self.cur_indexs = indexes
         # Check row order
         if self.check_row_order and len(indexes) >= 2:
             if not np.all(np.diff(indexes) > 0):
@@ -154,6 +156,7 @@ class DraggableList:
             If success
         """
         row_index = self.keyword2index(row)
+
         if not row_index:
             logger.warning(f'Insight row {row} but index unknown')
             return False
@@ -169,7 +172,7 @@ class DraggableList:
             self.load_rows(main=main)
 
             # End
-            if self.cur_buttons and self.cur_min <= row_index <= self.cur_max:
+            if self.cur_buttons and row_index in self.cur_indexs:
                 break
 
             # Drag pages
