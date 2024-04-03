@@ -45,6 +45,7 @@ class switchAccount(UI):
                 continue
             else:
                 self.device.click(results[0])
+                self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
                 return True
             
             
@@ -55,6 +56,7 @@ class switchAccount(UI):
         if currentAccount.ocr_single_line(self.device.image) == accountInfo:
             return True
         switch = False
+        cnt=0
         while 1:
             if not switch and self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT):
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
@@ -64,9 +66,13 @@ class switchAccount(UI):
             if not self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT) and switch:
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
 
-            if currentAccount.ocr_single_line(self.device.image) == accountInfo:
+            if currentAccount.ocr_single_line(self.device.image) == accountInfo and switch:
                 return True
             else:
+                switch=False
+                cnt += 1
+
+            if cnt > 5:
                 return False
             # return False
 
