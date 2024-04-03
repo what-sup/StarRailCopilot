@@ -76,7 +76,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
 
             # Click Login after choosing
-            if switched and not login_success and login.matched_single_line(image=self.device.image, keyword_classes=login_keyword):
+            if switched and not login_success and self.appear(SWITCH_LOGIN):
                 if self.appear_then_click(SWITCH_LOGIN):
                     logger.info(f'Login to {account_info}')
                     login_success = True
