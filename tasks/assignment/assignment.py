@@ -13,8 +13,8 @@ from tasks.login.login import Login
 
 class Assignment(AssignmentClaim, SynthesizeUI):
     def run(self, assignments: list[AssignmentEntry] = None, duration: int = None, event_first: bool = None):
-        if Login.accountSwtich:
-            Login.ensureAccount(self)
+        if Login(config=self.config, device=self.device).accountSwtich:
+            Login(config=self.config, device=self.device).ensureAccount()
 
         scheduleTime = self.config.cross_get(keys=f'Assignment.Scheduler.NextRun', default=DEFAULT_TIME)
         self.config.update_battle_pass_quests()

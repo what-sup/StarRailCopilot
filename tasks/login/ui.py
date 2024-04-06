@@ -13,8 +13,8 @@ from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, CURRENT_ACCOUN
 
 class switchAccount(UI):
 
+    @property
     def accountSwtich(self):
-        logger.info(deep_get((self.config.data, 'Login.AccountSwitch.Enable', False)))
         return deep_get((self.config.data, 'Login.AccountSwitch.Enable', False))
 
     def dragList(self):

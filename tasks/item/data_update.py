@@ -38,8 +38,8 @@ class DataUpdate(UI):
         return credit, jade
 
     def run(self):
-        if Login.accountSwtich:
-            Login.ensureAccount(self)
+        if Login(config=self.config, device=self.device).accountSwtich:
+            Login(config=self.config, device=self.device).ensureAccount()
         self.ui_ensure(page_item, acquire_lang_checked=False)
 
         with self.config.multi_set():

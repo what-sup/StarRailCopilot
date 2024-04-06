@@ -315,8 +315,8 @@ class DailyQuestUI(DungeonUI, RouteLoader):
         return done
 
     def run(self):
-        if Login.accountSwtich:
-            Login.ensureAccount(self)
+        if Login(config=self.config, device=self.device).accountSwtich:
+            Login(config=self.config, device=self.device).ensureAccount()
 
         self.config.update_battle_pass_quests()
         self.claimed_point_reward = False
