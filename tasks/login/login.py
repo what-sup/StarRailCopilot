@@ -1,17 +1,29 @@
 from module.base.timer import Timer
-from module.exception import GameNotRunningError
+from module.exception import GameNotRunningError, WrongAccount
 from module.logger import logger
 from module.config.utils import deep_get
 from module.ocr.ocr import Ocr
-from module.ocr.keyword import Keyword
 from tasks.base.page import page_main
 from tasks.base.ui import UI
 from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, LOGIN_CONFIRM, LOGIN_LOADING, LOGOUT_COMFIRM, SWITCH_LOGIN, USER_AGREEMENT_ACCEPT, LOGOUT_ACCOUNT_LOGOUT, GAME_INFO
-from tasks.login.cloud import LoginAndroidCloud
+from tasks.login.cloud import LoginAndroidCloud, XPath
 from tasks.login.ui import switchAccount
 
 
 class Login(switchAccount, UI, LoginAndroidCloud):
+    
+    @property
+    def account_info(self):
+        return str(deep_get(self.config.data, keys='Login.AccountSwitch.AccountInfo')).replace("*", "")
+    
+    @property
+    def switch_account(self):
+        return deep_get(self.config.data, keys='Login.AccountSwitch.Enable')
+    
+    @property
+    def android_cloud(self):
+        return deep_get(self.config.data, keys='Alas.GameClient', default='android') == 'android'
+
     def _handle_app_login(self):
         """
         Pages:
@@ -28,22 +40,16 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         startup_timer = Timer(5).start()
         app_timer = Timer(10).start()
         login_success = False
-        account_info = str(deep_get(self.config.data, keys='Login.AccountSwitch.AccountInfo')).replace("*", "")
-        switch_account = deep_get(self.config.data, keys='Login.AccountSwitch.Enable')
         switched = False
         info = Ocr(button=GAME_INFO)
-        login = Ocr(button=SWITCH_LOGIN)
-        login_keyword = Keyword(id=1, name="login_keyword", cn="进入游戏", en="", jp="", cht="", es="")
         
         while 1:
             # Watch if game alive
             if app_timer.reached():
-                if not self.device.app_is_running() or 'Android' not in info.ocr_single_line(self.device.image):
+                if not self.device.app_is_running() or ('PRODAndroid' if self.android_cloud else 'PRODWin') not in info.ocr_single_line(self.device.image):
                     logger.error('Game died during launch')
                     raise GameNotRunningError('Game not running')
                 app_timer.reset()
-                # logger.error('Game stuck')
-                # raise GameNotRunningError('Game not running')
 
             # Watch device rotation
             if not login_success and orientation_timer.reached():
@@ -57,7 +63,6 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             # Game client requires at least 5s to start
             # The first few frames might be captured before app_stop(), ignore them
             if startup_timer.reached():
-                # app_timer.start()
                 if self.ui_page_appear(page_main):
                     logger.info('Login to main confirm')
                     break
@@ -70,29 +75,25 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                 orientation_timer.reset()
 
             # Login directly without switching an account
-            if self.appear(LOGIN_CONFIRM) and (not switch_account):
+            if self.appear(LOGIN_CONFIRM) and (not Login.switch_account):
                 if self.appear_then_click(LOGIN_CONFIRM):
                     login_success = True
                     continue
 
             # Click Login after choosing
-            if switched and not login_success and self.appear(SWITCH_LOGIN):
+            if switched and not login_success and Login.appear(SWITCH_LOGIN):
                 if self.appear_then_click(SWITCH_LOGIN):
-                    logger.info(f'Login to {account_info}')
+                    logger.info(f'Login to {Login.account_info}')
                     login_success = True
                     continue
             
             # Login after switching an account
-            if self.appear(LOGIN_CONFIRM) and switch_account and switched:
+            if self.appear(LOGIN_CONFIRM) and Login.switch_account and switched:
                 if self.appear_then_click(LOGIN_CONFIRM):
                     continue
-
-            # if self.appear(LOGIN_START) and switch_account and switched and login_success:
-            #     if self.appear_then_click(LOGIN_START):
-            #         logger.info('clicked LOGIN_START')
             
             # Click logout comfirm button
-            if self.appear(LOGOUT_COMFIRM) and switch_account and not switched:
+            if self.appear(LOGOUT_COMFIRM) and Login.switch_account and not switched:
                 if self.appear_then_click(LOGOUT_COMFIRM):
                     logger.info(f'comfirm logout, start changing account')
                     continue
@@ -101,7 +102,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
             
             # Click logout button to switch account
-            if self.appear(LOGOUT_ACCOUNT_LOGOUT) and switch_account and not switched:
+            if self.appear(LOGOUT_ACCOUNT_LOGOUT) and Login.switch_account and not switched:
                 if self.appear_then_click(LOGOUT_ACCOUNT_LOGOUT):
                     logger.info('Logout Button clicked')
                     continue
@@ -111,12 +112,12 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             
             # Choose account from account list
             if self.appear(LOGIN_CHOOSE_ACCOUNT) and not switched:
-                if self.chooseAccount(account_info):
-                    logger.info(f'Sucessfully switch account to {account_info}')
+                if self.chooseAccount(Login.account_info):
+                    logger.info(f'Sucessfully switch account to {Login.account_info}')
                     switched = True
                     continue
                 else:
-                    logger.info(f'Failed to switch account to {account_info}. Please check whether the account is in the account list')
+                    logger.info(f'Failed to switch account to {Login.account_info}. Please check whether the account is in the account list')
                     continue
                 
             if self.appear_then_click(USER_AGREEMENT_ACCEPT):
@@ -142,6 +143,24 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         finally:
             self.device.screenshot_interval_set()
             self.device.stuck_timer = Timer(60, count=60).start()
+
+    def ensureAccount(self):
+        expectUID = deep_get(self.config.data, 'Login.AccountSwitch.GameId', None)
+        if not Login.android_cloud:
+            if str(expectUID) in self.xpath(XPath.UID).text:
+                return True
+            else:
+                if self.chooseAccount(expectUID):
+                    return True
+                else:
+                    WrongAccount('Wrong Account')
+        currentUID = Ocr(button=GAME_INFO) if Login.android_cloud else XPath.UID
+        ocrTimeout = Timer(5, 1).start()
+        while 1:
+            if str(expectUID) in currentUID.ocr_single_line(self.device.image):
+                return True
+            if ocrTimeout.reached():
+                raise WrongAccount('Wrong Account')
 
     def app_stop(self):
         logger.hr('App stop')

@@ -35,6 +35,7 @@ class XPath:
     ANDROID_UPDATE_CONFIRM = '//*[@resource-id="android:id/button1"]'
     # 补丁资源已更新，重启游戏可活动更好的游玩体验
     # - 下次再说 - 关闭游戏
+    UID = '[@resource-id="com.miHoYo.cloudgames.hkrpg:id/tvAid"]'
     POPUP_TITLE = '//*[@resource-id="com.miHoYo.cloudgames.hkrpg:id/titleTv"]'
     POPUP_CONFIRM = '//*[@resource-id="com.miHoYo.cloudgames.hkrpg:id/confirmTv"]'
     POPUP_CANCEL = '//*[@resource-id="com.miHoYo.cloudgames.hkrpg:id/cancelTv"]'
@@ -167,6 +168,8 @@ class LoginAndroidCloud(ModuleBase):
             out: page_main
         """
         logger.hr('Cloud enter')
+        from tasks.login.login import Login
+        Login.ensureAccount(self)
         while 1:
             if skip_first:
                 skip_first = False
@@ -220,7 +223,6 @@ class LoginAndroidCloud(ModuleBase):
         if self._cloud_net_state_appear():
             self._cloud_setting_disable_net_state()
         # Login to game
-        from tasks.login.login import Login
         Login(config=self.config, device=self.device).handle_app_login()
 
     def _cloud_setting_enter(self, skip_first=True):

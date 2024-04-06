@@ -1,13 +1,12 @@
 from module.base.utils import area_offset
 from module.logger import logger
-from module.exception import GameNotRunningError
 from tasks.battle_pass.keywords import KEYWORDS_BATTLE_PASS_QUEST
 from tasks.combat.combat import Combat
 from tasks.daily.keywords import KEYWORDS_DAILY_QUEST
 from tasks.dungeon.event import DungeonEvent
 from tasks.dungeon.keywords import DungeonList, KEYWORDS_DUNGEON_LIST, KEYWORDS_DUNGEON_NAV, KEYWORDS_DUNGEON_TAB
 from tasks.dungeon.stamina import DungeonStamina
-from tasks.login.ui import switchAccount
+from tasks.login.login import Login
 
 
 class Dungeon(DungeonStamina, DungeonEvent, Combat):
@@ -185,9 +184,8 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                                      support_character=support_character)
 
     def run(self):
-        if switchAccount.accountSwtich:
-            if not switchAccount.ensureAccount(self):
-                raise GameNotRunningError('Game not running')
+        if Login.accountSwtich:
+            Login.ensureAccount(self)
 
         self.config.update_battle_pass_quests()
         self.config.update_daily_quests()

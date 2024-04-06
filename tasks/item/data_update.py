@@ -4,6 +4,7 @@ from module.ocr.ocr import Digit
 from tasks.base.page import page_item
 from tasks.base.ui import UI
 from tasks.item.assets.assets_item_data import OCR_DATA
+from tasks.login.login import Login
 
 
 class DataUpdate(UI):
@@ -37,6 +38,8 @@ class DataUpdate(UI):
         return credit, jade
 
     def run(self):
+        if Login.accountSwtich:
+            Login.ensureAccount(self)
         self.ui_ensure(page_item, acquire_lang_checked=False)
 
         with self.config.multi_set():

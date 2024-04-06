@@ -28,6 +28,8 @@ class GameNotRunningError(Exception):
 class GamePageUnknownError(Exception):
     pass
 
+class WrongAccount(Exception):
+    pass
 
 class TaskError(Exception):
     # An error occurred in task,

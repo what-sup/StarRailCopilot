@@ -6,7 +6,6 @@ from module.base.utils import crop
 from module.logger import logger
 from module.ocr.ocr import Ocr, OcrResultButton
 from module.ocr.utils import split_and_pair_buttons
-from module.exception import GameNotRunningError
 from tasks.daily.assets.assets_daily_reward import *
 from tasks.daily.camera import CameraUI
 from tasks.daily.keywords import (
@@ -24,7 +23,7 @@ from tasks.item.consumable_usage import ConsumableUsageUI
 from tasks.item.relics import RelicsUI
 from tasks.map.route.loader import RouteLoader
 from tasks.map.route.route import ROUTE_DAILY
-from tasks.login.ui import switchAccount
+from tasks.login.login import Login
 
 
 class DailyQuestOcr(Ocr):
@@ -316,9 +315,8 @@ class DailyQuestUI(DungeonUI, RouteLoader):
         return done
 
     def run(self):
-        if switchAccount.accountSwtich:
-            if not switchAccount.ensureAccount(self):
-                raise GameNotRunningError('Game not running')
+        if Login.accountSwtich:
+            Login.ensureAccount(self)
 
         self.config.update_battle_pass_quests()
         self.claimed_point_reward = False

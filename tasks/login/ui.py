@@ -14,6 +14,7 @@ from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, CURRENT_ACCOUN
 class switchAccount(UI):
 
     def accountSwtich(self):
+        logger.info(deep_get((self.config.data, 'Login.AccountSwitch.Enable', False)))
         return deep_get((self.config.data, 'Login.AccountSwitch.Enable', False))
 
     def dragList(self):
@@ -83,13 +84,3 @@ class switchAccount(UI):
             #     logger.info('Click LOGIN_CHOOSE_ACCOUNT button failed')
             #     continue
         return False
-    
-    def ensureAccount(self):
-        expectUID = deep_get(self.config.data, 'Login.AccountSwitch.GameId', None)
-        currentUID = Ocr(button=GAME_INFO)
-        ocrTimeout = Timer(5, 1).start()
-        while 1:
-            if str(expectUID) in currentUID.ocr_single_line(self.device.image):
-                return True
-            if ocrTimeout.reached():
-                return False

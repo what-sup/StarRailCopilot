@@ -2,21 +2,19 @@ from datetime import datetime, timedelta
 
 from module.config.utils import DEFAULT_TIME
 from module.logger import logger
-from module.exception import GameNotRunningError
 from tasks.assignment.claim import AssignmentClaim
 from tasks.assignment.keywords import (AssignmentEntry, AssignmentEventGroup, KEYWORDS_ASSIGNMENT_GROUP)
 from tasks.assignment.ui import AssignmentStatus
 from tasks.base.page import page_assignment, page_menu
 from tasks.daily.keywords import KEYWORDS_DAILY_QUEST
 from tasks.daily.synthesize import SynthesizeUI
-from tasks.login.ui import switchAccount
+from tasks.login.login import Login
 
 
 class Assignment(AssignmentClaim, SynthesizeUI):
     def run(self, assignments: list[AssignmentEntry] = None, duration: int = None, event_first: bool = None):
-        if switchAccount.accountSwtich:
-            if not switchAccount.ensureAccount(self):
-                raise GameNotRunningError('Game not running')
+        if Login.accountSwtich:
+            Login.ensureAccount(self)
 
         scheduleTime = self.config.cross_get(keys=f'Assignment.Scheduler.NextRun', default=DEFAULT_TIME)
         self.config.update_battle_pass_quests()

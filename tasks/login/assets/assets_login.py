@@ -27,10 +27,10 @@ GAME_INFO = ButtonWrapper(
     name='GAME_INFO',
     share=Button(
         file='./assets/share/login/GAME_INFO.png',
-        area=(30, 690, 162, 706),
-        search=(10, 670, 182, 720),
-        color=(127, 131, 138),
-        button=(30, 690, 162, 706),
+        area=(5, 690, 397, 706),
+        search=(0, 670, 417, 720),
+        color=(230, 230, 230),
+        button=(5, 690, 397, 706),
     ),
 )
 LOGIN_CHOOSE_ACCOUNT = ButtonWrapper(

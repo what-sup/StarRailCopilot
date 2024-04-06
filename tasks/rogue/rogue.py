@@ -1,6 +1,7 @@
 from module.logger import logger
 from tasks.battle_pass.keywords import KEYWORDS_BATTLE_PASS_QUEST
 from tasks.daily.keywords import KEYWORDS_DAILY_QUEST
+from tasks.login.login import Login
 from tasks.rogue.entry.entry import RogueEntry
 from tasks.rogue.exception import RogueReachedWeeklyPointLimit, RogueTeamNotPrepared
 from tasks.rogue.route.loader import RouteLoader
@@ -31,6 +32,8 @@ class Rogue(RouteLoader, RogueEntry):
         return True
 
     def run(self):
+        if Login.accountSwtich:
+            Login.ensureAccount(self)
         self.config.update_battle_pass_quests()
         self.config.update_daily_quests()
         if self.config.stored.DungeonDouble.is_expired():
