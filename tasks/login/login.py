@@ -46,7 +46,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         while 1:
             # Watch if game alive
             if app_timer.reached():
-                if not self.device.app_is_running() or ('PRODAndroid' if self.android_cloud else 'PRODWin') not in info.ocr_single_line(self.device.image):
+                if not self.device.app_is_running() or ('Android' if self.android_cloud else 'Win') not in info.ocr_single_line(self.device.image).replace('0', 'O'):
                     logger.error('Game died during launch')
                     raise GameNotRunningError('Game not running')
                 app_timer.reset()
