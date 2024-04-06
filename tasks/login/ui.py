@@ -15,7 +15,7 @@ class switchAccount(UI):
 
     @property
     def accountSwtich(self):
-        return deep_get((self.config.data, 'Login.AccountSwitch.Enable', False))
+        return deep_get(self.config.data, 'Login.AccountSwitch.Enable', False)
 
     def dragList(self):
         width, height = area_size(ACCOUNT_LIST.area)
