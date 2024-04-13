@@ -19,9 +19,9 @@ class switchAccount(UI):
 
     def dragList(self):
         width, height = area_size(ACCOUNT_LIST.area)
-        vector = (0.65, 0.65)
+        vector = (0.7, 0.85)
         vector = numpy.random.uniform(*vector)
-        vector = (0, vector * height)
+        vector = (0, -vector * height)
         p1, p2 = random_rectangle_vector_opted(vector, box=ACCOUNT_LIST.area)
         self.device.drag(p1, p2, name='ACCOUNT_LIST_DRAG')
 

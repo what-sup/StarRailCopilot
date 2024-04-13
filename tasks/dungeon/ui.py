@@ -491,9 +491,9 @@ class DungeonUI(DungeonState):
         If world tab is not unlocked, fallback to Jarilo dungeons
         """
         # Wait world tab
-        button = CALYX_WORLD_1
+        button = CALYX_WORLD_TAB
         tab = False
-        timeout = Timer(0.6, count=3).start()
+        timeout = Timer(1, count=3).start()
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
@@ -502,14 +502,18 @@ class DungeonUI(DungeonState):
             # End
             if timeout.reached():
                 break
-            # Selected tab
-            if self.image_color_count(button, color=(18, 18, 18), threshold=180, count=50):
+            if self.image_color_count(button, color=(211, 211, 211), threshold=242, count=50):
                 tab = True
                 break
-            # Unselected tab
-            if self.image_color_count(button, color=(134, 134, 134), threshold=180, count=50):
-                tab = True
-                break
+
+            # # Selected tab
+            # if self.image_color_count(button, color=(18, 18, 18), threshold=180, count=50):
+            #     tab = True
+            #     break
+            # # Unselected tab
+            # if self.image_color_count(button, color=(134, 134, 134), threshold=180, count=50):
+            #     tab = True
+            #     break
 
         logger.attr('WorldTab', tab)
         if not tab:
@@ -521,7 +525,7 @@ class DungeonUI(DungeonState):
             if dungeon.is_Calyx_Golden_Treasures:
                 dungeon = KEYWORDS_DUNGEON_LIST.Calyx_Golden_Treasures_Jarilo_VI
 
-        self._dungeon_world_set(dungeon, skip_first_screenshot=skip_first_screenshot)
+        if tab: self._dungeon_world_set(dungeon, skip_first_screenshot=skip_first_screenshot)
         return dungeon
 
     def _dungeon_insight(self, dungeon: DungeonList):

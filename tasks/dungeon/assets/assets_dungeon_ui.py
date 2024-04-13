@@ -33,6 +33,16 @@ CALYX_WORLD_3 = ButtonWrapper(
         button=(689, 186, 739, 231),
     ),
 )
+CALYX_WORLD_TAB = ButtonWrapper(
+    name='CALYX_WORLD_TAB',
+    share=Button(
+        file='./assets/share/dungeon/ui/CALYX_WORLD_TAB.png',
+        area=(443, 187, 476, 223),
+        search=(423, 167, 496, 243),
+        color=(212, 211, 211),
+        button=(443, 187, 476, 223),
+    ),
+)
 DAILY_TRAINING_CHECK = ButtonWrapper(
     name='DAILY_TRAINING_CHECK',
     share=Button(
