@@ -506,15 +506,6 @@ class DungeonUI(DungeonState):
                 tab = True
                 break
 
-            # # Selected tab
-            # if self.image_color_count(button, color=(18, 18, 18), threshold=180, count=50):
-            #     tab = True
-            #     break
-            # # Unselected tab
-            # if self.image_color_count(button, color=(134, 134, 134), threshold=180, count=50):
-            #     tab = True
-            #     break
-
         logger.attr('WorldTab', tab)
         if not tab:
             logger.warning('World tab is not unlocked, fallback to Jarilo dungeons')

@@ -153,14 +153,14 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                 if self.chooseAccount(expectUID):
                     return True
                 else:
-                    WrongAccount('Wrong Account')
+                    raise WrongAccount('Wrong Account')
         currentUID = Ocr(button=GAME_INFO) if self.android_cloud else XPath.UID
         ocrTimeout = Timer(5, 1).start()
         while 1:
             if str(expectUID) in currentUID.ocr_single_line(self.device.image):
                 return True
             if ocrTimeout.reached():
-                raise WrongAccount('Wrong Account')
+                raise GameNotRunningError('Wrong Account')
 
     def app_stop(self):
         logger.hr('App stop')

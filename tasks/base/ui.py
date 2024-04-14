@@ -1,7 +1,7 @@
 from module.base.button import ButtonWrapper
 from module.base.decorator import run_once
 from module.base.timer import Timer
-from module.exception import GameNotRunningError, GamePageUnknownError
+from module.exception import GameNotRunningError, GamePageUnknownError, WrongAccount
 from module.logger import logger
 from module.ocr.ocr import Ocr
 from module.config.config import AzurLaneConfig
@@ -90,9 +90,9 @@ class UI(MainPage):
                 continue
             if self.appear(LOGIN_CONFIRM, interval=5):
                 timeout.reset()
-                raise GameNotRunningError('Game not running')
+                raise WrongAccount('Login Page')
             if self.appear(LOGOUT_COMFIRM):
-                raise GameNotRunningError('Game not running')
+                raise WrongAccount('Logout Comfirm Page')
             if self.appear(MAP_LOADING, interval=5):
                 logger.info('Map loading')
                 timeout.reset()

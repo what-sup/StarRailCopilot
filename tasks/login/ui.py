@@ -1,15 +1,12 @@
 import numpy
 
-from module.base.base import ModuleBase
 from tasks.base.ui import UI
 from module.base.timer import Timer
 from module.base.utils.utils import area_size, random_rectangle_vector_opted
 from module.config.utils import deep_get
-from module.logger import logger
-from module.ocr.ocr import Ocr, OcrResultButton
+from module.ocr.ocr import Ocr
 from module.ocr.keyword import Keyword
-from module.ui.draggable_list import DraggableList
-from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, CURRENT_ACCOUNT, ACCOUNT_LIST, SWITCH_LOGIN, GAME_INFO
+from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, CURRENT_ACCOUNT, ACCOUNT_LIST, SWITCH_LOGIN
 
 class switchAccount(UI):
 
@@ -27,19 +24,16 @@ class switchAccount(UI):
 
     def accountInsight(self, row: str):
         """
+        row: accountInfo
+
         1.OCR + DragList
-        2.generate button
-        3.select account
+        2.select account
         """
-        # row = row.replace("*", "")
         accountList = Ocr(button=ACCOUNT_LIST)
         keyword = Keyword(id=1, name='account', cn=row, cht=row, en=row, es=row, jp=row)
         while 1:
             
             results = accountList.matched_ocr(image=self.device.image, keyword_classes=keyword)
-            # indexes = [self.keyword2index(row.matched_keyword)
-            #        for row in self.cur_buttons]
-            # indexes = [index for index in indexes if index]
             if not results:
                 self.dragList()
                 self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
@@ -75,12 +69,4 @@ class switchAccount(UI):
 
             if cnt > 5:
                 return False
-            # return False
-
-            # if self.appear_then_click(LOGIN_CHOOSE_ACCOUNT):
-            #     logger.info('LOGIN_CHOOSE_ACCOUNT clicked')
-            #     self.accountInsight(row=accountInfo)
-            # else:
-            #     logger.info('Click LOGIN_CHOOSE_ACCOUNT button failed')
-            #     continue
         return False

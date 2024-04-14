@@ -62,16 +62,6 @@ LOGIN_CONFIRM = ButtonWrapper(
         ),
     ],
 )
-LOGIN_CURRENT_ACCOUNT = ButtonWrapper(
-    name='LOGIN_CURRENT_ACCOUNT',
-    share=Button(
-        file='./assets/share/login/LOGIN_CURRENT_ACCOUNT.png',
-        area=(541, 116, 737, 208),
-        search=(521, 96, 757, 228),
-        color=(206, 207, 207),
-        button=(541, 116, 737, 208),
-    ),
-)
 LOGIN_LOADING = ButtonWrapper(
     name='LOGIN_LOADING',
     share=Button(
@@ -84,13 +74,22 @@ LOGIN_LOADING = ButtonWrapper(
 )
 LOGOUT_ACCOUNT_LOGOUT = ButtonWrapper(
     name='LOGOUT_ACCOUNT_LOGOUT',
-    share=Button(
-        file='./assets/share/login/LOGOUT_ACCOUNT_LOGOUT.png',
-        area=(1185, 283, 1222, 317),
-        search=(1165, 263, 1242, 337),
-        color=(99, 104, 144),
-        button=(1185, 283, 1222, 317),
-    ),
+    share=[
+        Button(
+            file='./assets/share/login/LOGOUT_ACCOUNT_LOGOUT.png',
+            area=(1185, 283, 1222, 317),
+            search=(1165, 263, 1242, 337),
+            color=(99, 104, 144),
+            button=(1185, 283, 1222, 317),
+        ),
+        Button(
+            file='./assets/share/login/LOGOUT_ACCOUNT_LOGOUT.2.png',
+            area=(1189, 206, 1220, 232),
+            search=(1169, 186, 1240, 252),
+            color=(121, 128, 157),
+            button=(1189, 206, 1220, 232),
+        ),
+    ],
 )
 LOGOUT_COMFIRM = ButtonWrapper(
     name='LOGOUT_COMFIRM',

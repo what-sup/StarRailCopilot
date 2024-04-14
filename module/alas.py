@@ -82,9 +82,14 @@ class AzurLaneAutoScript:
             return True
         except TaskEnd:
             return True
-        except (GameNotRunningError, WrongAccount) as e:
+        except (GameNotRunningError) as e:
             logger.warning(e)
             self.config.task_call('Restart')
+            return True
+        except (WrongAccount) as e:
+            logger.warning(e)
+            from tasks.login.login import Login
+            Login(config=self.config, device=self.device).handle_app_login()
             return True
         except (GameStuckError, GameTooManyClickError) as e:
             logger.error(e)

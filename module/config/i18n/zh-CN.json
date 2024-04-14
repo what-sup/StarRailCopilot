@@ -23,8 +23,8 @@
       "help": ""
     },
     "Login": {
-      "name": "Task.Login.name",
-      "help": "Task.Login.help"
+      "name": "登录设置",
+      "help": ""
     },
     "Restart": {
       "name": "异常处理",
@@ -69,22 +69,22 @@
   },
   "AccountSwitch": {
     "_info": {
-      "name": "AccountSwitch._info.name",
-      "help": "AccountSwitch._info.help"
+      "name": "切换账号",
+      "help": "SRC将会在启动游戏时切换账号"
     },
     "Enable": {
-      "name": "AccountSwitch.Enable.name",
-      "help": "AccountSwitch.Enable.help",
+      "name": "启用该功能",
+      "help": "启用账号切换模块",
       "True": "True",
       "False": "False"
     },
     "AccountInfo": {
-      "name": "AccountSwitch.AccountInfo.name",
-      "help": "AccountSwitch.AccountInfo.help"
+      "name": "账号",
+      "help": "用于登录的账号，手机号或者邮箱"
     },
     "GameId": {
-      "name": "AccountSwitch.GameId.name",
-      "help": "AccountSwitch.GameId.help"
+      "name": "UID",
+      "help": "游戏UID，用于确保账号登录正确"
     }
   },
   "Scheduler": {
@@ -265,18 +265,18 @@
   },
   "DungeonMode": {
     "_info": {
-      "name": "DungeonMode._info.name",
-      "help": "DungeonMode._info.help"
+      "name": "副本延时模式",
+      "help": "每次打完副本后自动计算下次运行的方式"
     },
     "Mode": {
-      "name": "DungeonMode.Mode.name",
-      "help": "DungeonMode.Mode.help",
-      "auto": "auto",
-      "timer": "timer"
+      "name": "延时模式",
+      "help": "",
+      "auto": "根据开拓力自动计算时间",
+      "timer": "设定延迟的时间"
     },
     "Delay": {
-      "name": "DungeonMode.Delay.name",
-      "help": "DungeonMode.Delay.help"
+      "name": "延迟时间",
+      "help": "设置每次运行后需要延迟的小时数"
     }
   },
   "Dungeon": {
