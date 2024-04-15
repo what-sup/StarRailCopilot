@@ -51,11 +51,12 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                 if self.ui_page_appear(page_main):
                     logger.info('Login to main confirm')
                     break
-            if self.checkUID(self.account_info, info):
-                logger.info(f'Login to {self.account_info}')
-                break
+            
             # Watch if game alive
             if app_timer.reached():
+                if self.checkUID(self.account_info, info):
+                    logger.info(f'Login to {self.account_info}')
+                    continue
                 if not self.device.app_is_running() or ('Android' if self.android_cloud else 'Win') not in info.ocr_single_line(self.device.image).replace('0', 'O'):
                     logger.error('Game died during launch')
                     raise GameNotRunningError('Game not running')
