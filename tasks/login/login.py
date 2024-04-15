@@ -51,7 +51,9 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                 if self.ui_page_appear(page_main):
                     logger.info('Login to main confirm')
                     break
-            
+            if self.checkUID(self.account_info, info):
+                logger.info(f'Login to {self.account_info}')
+                break
             # Watch if game alive
             if app_timer.reached():
                 if not self.device.app_is_running() or ('Android' if self.android_cloud else 'Win') not in info.ocr_single_line(self.device.image).replace('0', 'O'):
@@ -143,6 +145,9 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         finally:
             self.device.screenshot_interval_set()
             self.device.stuck_timer = Timer(60, count=60).start()
+
+    def checkUID(self, expect: str, button: Ocr): 
+        return str(expect) in button.ocr_single_line(self.device.image)
 
     def ensureAccount(self):
         expectUID = deep_get(self.config.data, 'Login.AccountSwitch.GameId', None)
