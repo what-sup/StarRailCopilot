@@ -44,6 +44,14 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         info = Ocr(button=GAME_INFO)
         
         while 1:
+            # End
+            # Game client requires at least 5s to start
+            # The first few frames might be captured before app_stop(), ignore them
+            if startup_timer.reached():
+                if self.ui_page_appear(page_main):
+                    logger.info('Login to main confirm')
+                    break
+            
             # Watch if game alive
             if app_timer.reached():
                 if not self.device.app_is_running() or ('Android' if self.android_cloud else 'Win') not in info.ocr_single_line(self.device.image).replace('0', 'O'):
@@ -58,14 +66,6 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                 orientation_timer.reset()
 
             self.device.screenshot()
-            
-            # End
-            # Game client requires at least 5s to start
-            # The first few frames might be captured before app_stop(), ignore them
-            if startup_timer.reached():
-                if self.ui_page_appear(page_main):
-                    logger.info('Login to main confirm')
-                    break
 
             # Watch resource downloading and loading
             if self.appear(LOGIN_LOADING, interval=5):
