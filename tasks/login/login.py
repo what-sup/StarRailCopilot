@@ -58,9 +58,6 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             
             # Watch if game alive
             if app_timer.reached():
-                if self.checkUID(self.UID, info):
-                    logger.info(f'Login to {self.UID}')
-                    continue
                 if not self.device.app_is_running() or ('Android' if self.android_cloud else 'Win') not in info.ocr_single_line(self.device.image).replace('0', 'O'):
                     logger.error('Game died during launch')
                     raise GameNotRunningError('Game not running')
@@ -155,7 +152,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         return str(expect) in button.ocr_single_line(self.device.image)
 
     def ensureAccount(self):
-        expectUID = deep_get(self.config.data, 'Login.AccountSwitch.GameId', None)
+        expectUID = self.UID
         if not self.android_cloud:
             if str(expectUID) in self.xpath(XPath.UID).text:
                 return True
