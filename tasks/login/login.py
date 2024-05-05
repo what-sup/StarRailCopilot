@@ -42,7 +42,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         logger.hr('App login')
         orientation_timer = Timer(5)
         startup_timer = Timer(5).start()
-        app_timer = Timer(10).start()
+        app_timer = Timer(30).start()
         login_success = False
         switched = False
         info = Ocr(button=GAME_INFO)
