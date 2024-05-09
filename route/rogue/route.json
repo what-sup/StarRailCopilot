@@ -770,6 +770,17 @@
     "domain": "Combat"
   },
   {
+    "name": "Combat_Luofu_ArtisanshipCommission_F1_X481Y920",
+    "route": "route.rogue.Combat.Luofu_ArtisanshipCommission_F1:Luofu_ArtisanshipCommission_F1_X481Y920",
+    "plane": "Luofu_ArtisanshipCommission",
+    "floor": "F1",
+    "position": [
+      481.5,
+      920.9
+    ],
+    "domain": "Combat"
+  },
+  {
     "name": "Combat_Luofu_ArtisanshipCommission_F1_X543Y269",
     "route": "route.rogue.Combat.Luofu_ArtisanshipCommission_F1:Luofu_ArtisanshipCommission_F1_X543Y269",
     "plane": "Luofu_ArtisanshipCommission",
@@ -909,6 +920,17 @@
     "position": [
       49.3,
       405.6
+    ],
+    "domain": "Combat"
+  },
+  {
+    "name": "Combat_Luofu_Cloudford_F1Rogue_X44Y405",
+    "route": "route.rogue.Combat.Luofu_Cloudford_F1Rogue:Luofu_Cloudford_F1Rogue_X44Y405",
+    "plane": "Luofu_Cloudford",
+    "floor": "F1Rogue",
+    "position": [
+      43.8,
+      405.0
     ],
     "domain": "Combat"
   },
@@ -1573,6 +1595,17 @@
     "domain": "Occurrence"
   },
   {
+    "name": "Occurrence_Jarilo_BackwaterPass_F1_X611Y761",
+    "route": "route.rogue.Occurrence.Jarilo_BackwaterPass_F1:Jarilo_BackwaterPass_F1_X611Y761",
+    "plane": "Jarilo_BackwaterPass",
+    "floor": "F1",
+    "position": [
+      611.4,
+      761.2
+    ],
+    "domain": "Occurrence"
+  },
+  {
     "name": "Occurrence_Jarilo_CorridorofFadingEchoes_F1_X236Y903",
     "route": "route.rogue.Occurrence.Jarilo_CorridorofFadingEchoes_F1:Jarilo_CorridorofFadingEchoes_F1_X236Y903",
     "plane": "Jarilo_CorridorofFadingEchoes",
@@ -1690,6 +1723,17 @@
     "position": [
       439.3,
       237.1
+    ],
+    "domain": "Occurrence"
+  },
+  {
+    "name": "Occurrence_Jarilo_SilvermaneGuardRestrictedZone_F1_X435Y233",
+    "route": "route.rogue.Occurrence.Jarilo_SilvermaneGuardRestrictedZone_F1:Jarilo_SilvermaneGuardRestrictedZone_F1_X435Y233",
+    "plane": "Jarilo_SilvermaneGuardRestrictedZone",
+    "floor": "F1",
+    "position": [
+      435.5,
+      233.5
     ],
     "domain": "Occurrence"
   },
@@ -1943,6 +1987,17 @@
     "position": [
       554.6,
       245.0
+    ],
+    "domain": "Respite"
+  },
+  {
+    "name": "Respite_Herta_SupplyZone_F2_X550Y248",
+    "route": "route.rogue.Respite.Herta_SupplyZone_F2:Herta_SupplyZone_F2_X550Y248",
+    "plane": "Herta_SupplyZone",
+    "floor": "F2",
+    "position": [
+      550.7,
+      248.7
     ],
     "domain": "Respite"
   },
