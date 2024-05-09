@@ -129,12 +129,14 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                     if self.config.stored.BattlePassQuestEchoOfWar.is_full():
                         logger.info('Achieved weekly quest Complete_Echo_of_War_1_times')
                         self.achieved_weekly_quest = True
+            '''
             # Support quest
             if support_character is not None:
                 self.called_daily_support = True
                 if KEYWORDS_DAILY_QUEST.Obtain_victory_in_combat_with_Support_Characters_1_times:
                     logger.info('Achieve daily quest Obtain_victory_in_combat_with_Support_Characters_1_times')
                     self.achieved_daily_quest = True
+            '''
             # Stamina quest
             self.check_stamina_quest(self.combat_wave_cost * count)
 

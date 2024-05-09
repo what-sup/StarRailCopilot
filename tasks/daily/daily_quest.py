@@ -273,7 +273,8 @@ class DailyQuestUI(DungeonUI, RouteLoader):
         if KEYWORDS_DAILY_QUEST.Complete_Forgotten_Hall_1_time in quests:
             self.route_run(ROUTE_DAILY.ForgottenHallStage1__route)
             done += 1
-
+        
+        '''
         """
         enemy x1 In_a_single_battle_inflict_3_Weakness_Break_of_different_Types
         enemy x1 Inflict_Weakness_Break_5_times
@@ -311,6 +312,7 @@ class DailyQuestUI(DungeonUI, RouteLoader):
                 break
         if max(enemy, item) > 0:
             self.route_run(ROUTE_DAILY.HimekoTrial__exit)
+        '''
 
         return done
 
