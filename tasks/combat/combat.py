@@ -81,7 +81,7 @@ class Combat(CombatInteract, CombatPrepare, CombatState, CombatTeam, CombatSuppo
         """
         logger.hr('Combat prepare')
         skip_first_screenshot = True
-        if support_character is not None:
+        if support_character:
             # To set team before support set
             pre_set_team = True
             # Block COMBAT_TEAM_PREPARE before support set
