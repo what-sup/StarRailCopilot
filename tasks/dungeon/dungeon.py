@@ -402,7 +402,7 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
 
         # Not required, cause any dungeon run will achieve the quest
         logger.attr('DungeonSupport_Use', self.config.DungeonSupport_Use)
-        if self.config.DungeonSupport_Use == 'always_use':
+        if self.config.DungeonSupport_Use != 'always_use':
             require = False
 
         logger.attr('Require compulsory support', require)
