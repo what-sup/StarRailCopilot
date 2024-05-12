@@ -61,7 +61,7 @@ class switchAccount(UI):
             if not self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT) and switch:
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
 
-            if currentAccount.ocr_single_line(self.device.image) == accountInfo and switch:
+            if switch:
                 return True
             else:
                 switch=False
