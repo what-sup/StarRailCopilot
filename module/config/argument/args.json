@@ -273,6 +273,7 @@
           "Calyx_Crimson_Preservation_Herta_SupplyZone",
           "Calyx_Crimson_Preservation_Penacony_ClockStudiosThemePark",
           "Calyx_Crimson_The_Hunt_Jarilo_OutlyingSnowPlains",
+          "Calyx_Crimson_The_Hunt_Penacony_SoulGladScorchsandAuditionVenue",
           "Calyx_Crimson_Abundance_Jarilo_BackwaterPass",
           "Calyx_Crimson_Abundance_Luofu_FyxestrollGarden",
           "Calyx_Crimson_Erudition_Jarilo_RivetTown",
@@ -282,6 +283,7 @@
           "Calyx_Crimson_Nihility_Luofu_AlchemyCommission",
           "Stagnant_Shadow_Spike",
           "Stagnant_Shadow_Perdition",
+          "Stagnant_Shadow_Duty",
           "Stagnant_Shadow_Blaze",
           "Stagnant_Shadow_Scorch",
           "Stagnant_Shadow_Ire",
@@ -326,6 +328,7 @@
           "Calyx_Crimson_Preservation_Herta_SupplyZone",
           "Calyx_Crimson_Preservation_Penacony_ClockStudiosThemePark",
           "Calyx_Crimson_The_Hunt_Jarilo_OutlyingSnowPlains",
+          "Calyx_Crimson_The_Hunt_Penacony_SoulGladScorchsandAuditionVenue",
           "Calyx_Crimson_Abundance_Jarilo_BackwaterPass",
           "Calyx_Crimson_Abundance_Luofu_FyxestrollGarden",
           "Calyx_Crimson_Erudition_Jarilo_RivetTown",
@@ -393,6 +396,7 @@
           "Calyx_Crimson_Preservation_Herta_SupplyZone",
           "Calyx_Crimson_Preservation_Penacony_ClockStudiosThemePark",
           "Calyx_Crimson_The_Hunt_Jarilo_OutlyingSnowPlains",
+          "Calyx_Crimson_The_Hunt_Penacony_SoulGladScorchsandAuditionVenue",
           "Calyx_Crimson_Abundance_Jarilo_BackwaterPass",
           "Calyx_Crimson_Abundance_Luofu_FyxestrollGarden",
           "Calyx_Crimson_Erudition_Jarilo_RivetTown",
@@ -409,6 +413,7 @@
           "do_not_achieve",
           "Stagnant_Shadow_Spike",
           "Stagnant_Shadow_Perdition",
+          "Stagnant_Shadow_Duty",
           "Stagnant_Shadow_Blaze",
           "Stagnant_Shadow_Scorch",
           "Stagnant_Shadow_Ire",
@@ -1224,13 +1229,11 @@
   "DataUpdate": {
     "Scheduler": {
       "Enable": {
-        "type": "state",
-        "value": true,
+        "type": "checkbox",
+        "value": false,
         "option": [
-          true
-        ],
-        "option_bold": [
-          true
+          true,
+          false
         ]
       },
       "NextRun": {
@@ -1336,7 +1339,8 @@
           "Echo_of_War_Destruction_Beginning",
           "Echo_of_War_End_of_the_Eternal_Freeze",
           "Echo_of_War_Divine_Seed",
-          "Echo_of_War_Borehole_Planet_Old_Crater"
+          "Echo_of_War_Borehole_Planet_Old_Crater",
+          "Echo_of_War_Salutations_of_Ashen_Dreams"
         ]
       },
       "Team": {
