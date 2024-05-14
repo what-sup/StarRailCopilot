@@ -14,11 +14,11 @@ class switchAccount(UI):
     def accountSwtich(self):
         return deep_get(self.config.data, 'Login.AccountSwitch.Enable', False)
 
-    def dragList(self):
+    def dragList(self, direction: int):
         width, height = area_size(ACCOUNT_LIST.area)
         vector = (0.7, 0.85)
         vector = numpy.random.uniform(*vector)
-        vector = (0, -vector * height)
+        vector = (0, direction * vector * height)
         p1, p2 = random_rectangle_vector_opted(vector, box=ACCOUNT_LIST.area)
         self.device.drag(p1, p2, name='ACCOUNT_LIST_DRAG')
 
@@ -35,7 +35,7 @@ class switchAccount(UI):
             
             results = accountList.matched_ocr(image=self.device.image, keyword_classes=keyword)
             if not results:
-                self.dragList()
+                self.dragList(direction=-1)
                 self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
                 continue
             else:
@@ -55,9 +55,14 @@ class switchAccount(UI):
         while 1:
             if not switch and self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT):
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
-                if self.accountInsight(row=accountInfo):
-                    switch = True
+                
             
+            if not switch and not self.appear(SWITCH_LOGIN):
+                if self.accountInsight(row=accountInfo):
+                   switch = True
+                else:
+                   self.dragList(direction=1)
+
             if not self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT) and switch:
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
 
