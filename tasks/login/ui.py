@@ -55,13 +55,9 @@ class switchAccount(UI):
         while 1:
             if not switch and self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT):
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
-                
-            
-            if not switch and not self.appear(SWITCH_LOGIN):
+                self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
                 if self.accountInsight(row=accountInfo):
                    switch = True
-                else:
-                   self.dragList(direction=1)
 
             if not self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT) and switch:
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
