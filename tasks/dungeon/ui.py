@@ -82,6 +82,9 @@ class OcrDungeonList(Ocr):
         # 乙太之蕾•雅利洛-Ⅵ
         result = re.sub(r'-[VⅤ][IⅠ]', '-Ⅵ', result)
 
+        # 苏乐达™热砂海选会场
+        result = re.sub(r'(苏乐达|蘇樂達|SoulGlad|スラーダ|FelizAlma)[rtT]*M', r'\1', result)
+
         result = super().after_process(result)
 
         if self.lang == 'cn':
@@ -92,6 +95,8 @@ class OcrDungeonList(Ocr):
             result = re.sub('^灼之形', '燔灼之形', result)
             # 偃偶之形•凝滞虚影
             result = re.sub('^偶之形', '偃偶之形', result)
+            # 嗔怒之形•凝滞虚影
+            result = re.sub('^怒之形', '嗔怒之形', result)
             # 蛀星的旧·历战余响
             result = re.sub(r'蛀星的旧.*?历战', '蛀星的旧靥•历战', result)
 
