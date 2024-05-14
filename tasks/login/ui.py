@@ -34,6 +34,8 @@ class switchAccount(UI):
         while 1:
             
             results = accountList.matched_ocr(image=self.device.image, keyword_classes=keyword)
+            if '登录' in results:
+                continue
             if not results:
                 self.dragList(direction=-1)
                 self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
