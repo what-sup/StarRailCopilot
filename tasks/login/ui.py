@@ -50,7 +50,7 @@ class switchAccount(UI):
 
     def chooseAccount(self, accountInfo: str):
         currentAccount = Ocr(button=CURRENT_ACCOUNT)
-        if accountInfo in currentAccount.ocr_single_line(self.device.image):
+        if str(accountInfo) in currentAccount.ocr_single_line(self.device.image):
             return True
         switch = False
         cnt=0
