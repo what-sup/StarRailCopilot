@@ -1,5 +1,6 @@
 import numpy
 
+from module.logger import logger
 from tasks.base.ui import UI
 from module.base.timer import Timer
 from module.base.utils.utils import area_size, random_rectangle_vector_opted
@@ -32,10 +33,10 @@ class switchAccount(UI):
         accountList = Ocr(button=ACCOUNT_LIST)
         keyword = Keyword(id=1, name='account', cn=row, cht=row, en=row, es=row, jp=row)
         while 1:
-            
-            results = accountList.matched_ocr(image=self.device.image, keyword_classes=keyword)
-            if '登录' in results:
+            self.device.screenshot()
+            if self.appear(button=SWITCH_LOGIN):
                 continue
+            results = accountList.matched_ocr(image=self.device.image, keyword_classes=keyword)
             if not results:
                 self.dragList(direction=-1)
                 self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
@@ -44,20 +45,19 @@ class switchAccount(UI):
                 self.device.click(results[0])
                 self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
                 return True
-            
-            
         return False
 
     def chooseAccount(self, accountInfo: str):
         currentAccount = Ocr(button=CURRENT_ACCOUNT)
-        if str(accountInfo) in currentAccount.ocr_single_line(self.device.image):
+        logger.info(f'{accountInfo}')
+        if accountInfo in str(currentAccount.ocr_single_line(self.device.image)).replace('*', ''):
             return True
         switch = False
         cnt=0
         while 1:
+            self.device.screenshot()
             if not switch and self.appear(SWITCH_LOGIN) and self.appear(LOGIN_CHOOSE_ACCOUNT):
                 self.appear_then_click(LOGIN_CHOOSE_ACCOUNT)
-                self.wait_until_stable(button=ACCOUNT_LIST, timer=Timer(0, count=0), timeout=Timer(1.5, count=5))
                 if self.accountInsight(row=accountInfo):
                    switch = True
 
@@ -73,3 +73,9 @@ class switchAccount(UI):
             if cnt > 5:
                 return False
         return False
+    
+if __name__ == '__main__':
+    self = switchAccount('src')
+    while 1:
+        self.device.screenshot()
+        logger.info(f'{self.appear(SWITCH_LOGIN)}')

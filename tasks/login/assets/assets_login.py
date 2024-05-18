@@ -105,9 +105,9 @@ SWITCH_LOGIN = ButtonWrapper(
     name='SWITCH_LOGIN',
     share=Button(
         file='./assets/share/login/SWITCH_LOGIN.png',
-        area=(374, 396, 906, 479),
-        search=(354, 376, 926, 499),
-        color=(250, 208, 125),
+        area=(580, 422, 699, 453),
+        search=(560, 402, 719, 473),
+        color=(190, 159, 98),
         button=(374, 396, 906, 479),
     ),
 )
