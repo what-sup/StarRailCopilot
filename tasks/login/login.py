@@ -220,3 +220,8 @@ class Login(switchAccount, UI, LoginAndroidCloud):
 
         logger.hr('Cloud stop')
         self.app_stop()
+
+if __name__ == '__main__':
+    self = Login('src')
+    self.device.screenshot()
+    self.handle_app_login()
