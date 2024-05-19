@@ -139,7 +139,7 @@ class DungeonState(UI):
             limit = 30
         else:
             limit = 120
-
+            
         # Double event is not yet finished, do it today as possible
         diff = get_server_next_update('04:00') - now()
         if self.config.stored.DungeonDouble.relic > 0:
@@ -176,7 +176,9 @@ class DungeonState(UI):
             for task in tasks:
                 scheduleTime = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
                 interval = int(self.config.cross_get(keys=f'{task}.DungeonMode.Delay', default='12'))
-                future = now() if abs(now() - scheduleTime) > timedelta(hours=2 * interval) else scheduleTime + timedelta(hours=interval)
+                future = get_server_next_update(self.config.Scheduler_ServerUpdate)
+                while future - timedelta(hours=interval) > now():
+                    future -= timedelta(hours=interval)
                 self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
         else:
             with self.config.multi_set():
@@ -185,3 +187,7 @@ class DungeonState(UI):
                     if future > next_run:
                         logger.info(f"Delay task `{task}` to {future}")
                         self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
+
+if __name__ == '__main__':
+    self = DungeonState('src')
+    self.dungeon_stamina_delay()
