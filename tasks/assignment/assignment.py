@@ -45,7 +45,6 @@ class Assignment(AssignmentClaim, SynthesizeUI):
         self.has_new_dispatch = False
         self.ensure_scroll_top(page_menu)
         self.ui_ensure(page_assignment)
-        self._wait_until_group_loaded()
         event_ongoing = next((
             g for g in self._iter_groups()
             if isinstance(g, AssignmentEventGroup)
@@ -103,12 +102,14 @@ class Assignment(AssignmentClaim, SynthesizeUI):
         logger.info(
             f'User specified assignments: {", ".join([x.name for x in assignments])}')
         remain = None
+        insight = False
         for assignment in assignments:
             if assignment in self.dispatched:
                 continue
             logger.hr('Assignment inlist', level=2)
             logger.info(f'Check assignment inlist: {assignment}')
-            self.goto_entry(assignment)
+            self.goto_entry(assignment, insight=insight)
+            insight = True
             if remain is None:
                 _, remain, _ = self._limit_status
             status = self._check_assignment_status()
@@ -118,6 +119,7 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             if status == AssignmentStatus.DISPATCHED:
                 self.dispatched[assignment] = datetime.now() + \
                     self._get_assignment_time()
+                insight = False
                 continue
             # General assignments must be dispatchable here
             if remain <= 0:
@@ -217,8 +219,8 @@ class Assignment(AssignmentClaim, SynthesizeUI):
                     continue
                 logger.hr('Assignment event', level=2)
                 logger.info(f'Check assignment event: {assignment}')
-                # Order of entries does not change during iteration
-                self.goto_entry(assignment, insight=False)
+                # Order of entries changes if claimed
+                self.goto_entry(assignment, insight=claimed)
                 status = self._check_assignment_status()
                 if status == AssignmentStatus.LOCKED:
                     continue
