@@ -28,6 +28,8 @@ class ModuleBase:
         """
         if isinstance(config, AzurLaneConfig):
             self.config = config
+            if task is not None:
+                self.config.init_task(task)
         elif isinstance(config, str):
             self.config = AzurLaneConfig(config, task=task)
         else:
@@ -271,7 +273,7 @@ class ModuleBase:
         Returns:
             Button: Or None if nothing matched.
         """
-        image = color_similarity_2d(self.image_crop(area), color=color)
+        image = color_similarity_2d(self.image_crop(area, copy=False), color=color)
         points = np.array(np.where(image > color_threshold)).T[:, ::-1]
         if points.shape[0] < encourage ** 2:
             # Not having enough pixels to match

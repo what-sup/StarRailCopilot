@@ -27,9 +27,9 @@ Daily:
   tasks:
     Dungeon:
       - Scheduler
+      - Planner
       - DungeonMode
       - Dungeon
-      - DungeonDaily
       - DungeonSupport
       - DungeonStorage
     DailyQuest:
@@ -73,3 +73,5 @@ Tool:
   tasks:
     Daemon:
       - Daemon
+    PlannerScan:
+      - PlannerScan

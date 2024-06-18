@@ -1,10 +1,14 @@
 from datetime import datetime, timedelta
 
+from module.config.stored.classes import now
+from module.config.utils import get_server_next_update
 from module.config.utils import DEFAULT_TIME
 from module.logger import logger
 from tasks.assignment.claim import AssignmentClaim
-from tasks.assignment.keywords import (AssignmentEntry, AssignmentEventGroup, KEYWORDS_ASSIGNMENT_GROUP)
-from tasks.assignment.ui import AssignmentStatus
+from tasks.assignment.keywords import (KEYWORDS_ASSIGNMENT_GROUP,
+                                       AssignmentEntry, AssignmentEventEntry,
+                                       AssignmentEventGroup)
+from tasks.assignment.ui import ASSIGNMENT_ENTRY_LIST, AssignmentStatus
 from tasks.base.page import page_assignment, page_menu
 from tasks.daily.keywords import KEYWORDS_DAILY_QUEST
 from tasks.daily.synthesize import SynthesizeUI
@@ -12,7 +16,7 @@ from tasks.login.login import Login
 
 
 class Assignment(AssignmentClaim, SynthesizeUI):
-    def run(self, assignments: list[AssignmentEntry] = None, duration: int = None, event_first: bool = None):
+    def run(self, assignments: list[AssignmentEntry] = None, duration: int = None, join_event: bool = None):
         if Login(config=self.config, device=self.device).accountSwtich:
             Login(config=self.config, device=self.device).ensureAccount()
 
@@ -32,8 +36,12 @@ class Assignment(AssignmentClaim, SynthesizeUI):
                     'There are duplicate assignments in config, check it out')
         if duration is None:
             duration = self.config.Assignment_Duration
-        if event_first is None:
-            event_first = self.config.Assignment_Event
+        if join_event is None:
+            join_event = self.config.Assignment_Event
+
+        configDuration = duration
+        if duration == 24: 
+            duration = 20
 
         configDuration = duration
         if duration == 24: 
@@ -41,20 +49,19 @@ class Assignment(AssignmentClaim, SynthesizeUI):
 
         self.dispatched = dict()
         self.has_new_dispatch = False
+        ASSIGNMENT_ENTRY_LIST.cur_buttons = []
         self.ensure_scroll_top(page_menu)
         self.ui_ensure(page_assignment)
         event_ongoing = next((
             g for g in self._iter_groups()
             if isinstance(g, AssignmentEventGroup)
         ), None)
-        if event_first and event_ongoing is not None:
-            undispatched = assignments
-            remain = self._check_all()
-            remain = self._dispatch_event(remain)
-        else:
-            # Iterate in user-specified order, return undispatched ones
-            undispatched = list(self._check_inlist(assignments, duration))
-            remain = self._check_all()
+        if join_event and event_ongoing is not None:
+            if self._check_event():
+                self._check_event()
+        # Iterate in user-specified order, return undispatched ones
+        undispatched = list(self._check_inlist(assignments, duration))
+        remain = self._check_all()
         undispatched = [x for x in undispatched if x not in self.dispatched]
         # There are unchecked assignments
         if remain > 0:
@@ -83,10 +90,21 @@ class Assignment(AssignmentClaim, SynthesizeUI):
                     delay = datetime.now() if abs(datetime.now() - scheduleTime) > timedelta(hours=2 * configDuration) else scheduleTime + timedelta(hours=configDuration)
                 logger.info(f'Delay assignment check to {str(delay)}')
                 self.config.task_delay(target=delay)
+                # Align server update
+                update = get_server_next_update(self.config.Scheduler_ServerUpdate)
+                if update - delay < timedelta(hours=4):
+                    logger.info('Approaching next day, delay to server update instead')
+                    self.config.task_delay(target=update)
             else:
                 # ValueError: min() arg is an empty sequence
                 logger.error('Empty dispatched list, delay 2 hours instead')
                 self.config.task_delay(minute=120)
+                # Check future daily
+                if now() > get_server_next_update(self.config.Scheduler_ServerUpdate) - timedelta(minutes=110) \
+                        and KEYWORDS_DAILY_QUEST.Dispatch_1_assignments in quests:
+                    logger.error(
+                        "Assigment is scheduled tomorrow but today's assignment daily haven't been finished yet")
+                    self.config.task_call('DailyQuest')
 
     def _check_inlist(self, assignments: list[AssignmentEntry], duration: int):
         """
@@ -101,13 +119,17 @@ class Assignment(AssignmentClaim, SynthesizeUI):
         logger.hr('Assignment check inlist', level=1)
         logger.info(
             f'User specified assignments: {", ".join([x.name for x in assignments])}')
-        _, remain, _ = self._limit_status
+        remain = None
+        insight = False
         for assignment in assignments:
             if assignment in self.dispatched:
                 continue
             logger.hr('Assignment inlist', level=2)
             logger.info(f'Check assignment inlist: {assignment}')
-            self.goto_entry(assignment)
+            self.goto_entry(assignment, insight=insight)
+            insight = True
+            if remain is None:
+                _, remain, _ = self._limit_status
             status = self._check_assignment_status()
             if status == AssignmentStatus.CLAIMABLE:
                 self.claim(assignment, duration, should_redispatch=True)
@@ -115,6 +137,7 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             if status == AssignmentStatus.DISPATCHED:
                 self.dispatched[assignment] = datetime.now() + \
                     self._get_assignment_time()
+                insight = False
                 continue
             # General assignments must be dispatchable here
             if remain <= 0:
@@ -133,10 +156,16 @@ class Assignment(AssignmentClaim, SynthesizeUI):
         """
         logger.hr('Assignment check all', level=1)
         current, remain, _ = self._limit_status
+        len_dispatched = len([
+            x for x in self.dispatched.keys()
+            if not isinstance(x, AssignmentEventEntry)
+        ])
         # current = #Claimable + #Dispatched
-        if current == len(self.dispatched):
+        if current == len_dispatched:
             return remain
         for group in self._iter_groups():
+            if isinstance(group, AssignmentEventGroup):
+                continue
             self.goto_group(group)
             insight = False
             for assignment in self._iter_entries():
@@ -144,21 +173,22 @@ class Assignment(AssignmentClaim, SynthesizeUI):
                     continue
                 logger.hr('Assignment all', level=2)
                 logger.info(f'Check assignment all: {assignment}')
-                self.goto_entry(assignment, insight)
+                self.goto_entry(assignment, insight=insight)
                 status = self._check_assignment_status()
                 if status == AssignmentStatus.CLAIMABLE:
                     self.claim(assignment, None, should_redispatch=False)
                     current -= 1
                     remain += 1
                     insight = True  # Order of entries change after claiming
-                    if current == len(self.dispatched):
+                    if current == len_dispatched:
                         return remain
                     continue
                 if status == AssignmentStatus.DISPATCHED:
                     self.dispatched[assignment] = datetime.now() + \
                         self._get_assignment_time()
+                    len_dispatched += 1
                     insight = False  # Order of entries does not change here
-                    if current == len(self.dispatched):
+                    if current == len_dispatched:
                         return remain
                     continue
                 break
@@ -195,28 +225,32 @@ class Assignment(AssignmentClaim, SynthesizeUI):
                 if remain <= 0:
                     return
 
-    def _dispatch_event(self, remain: int):
-        if remain <= 0:
-            return remain
-        logger.hr('Assignment dispatch event', level=1)
+    def _check_event(self):
+        logger.hr('Assignment check event', level=1)
+        claimed = False
         for group in self._iter_groups():
             if not isinstance(group, AssignmentEventGroup):
                 continue
             self.goto_group(group)
+            insight = False
             for assignment in self._iter_entries():
                 if assignment in self.dispatched:
                     continue
                 logger.hr('Assignment event', level=2)
                 logger.info(f'Check assignment event: {assignment}')
-                # Order of entries does not change during iteration
-                self.goto_entry(assignment, insight=False)
+                # Order of entries changes if claimed
+                self.goto_entry(assignment, insight=insight)
+                insight = False
                 status = self._check_assignment_status()
-                # Should only be dispatchable or locked after _check_all
-                if status == AssignmentStatus.DISPATCHABLE:
-                    self.dispatch(assignment, None)
-                    remain -= 1
-                    if remain <= 0:
-                        return remain
+                if status == AssignmentStatus.LOCKED:
                     continue
-                break
-        return remain
+                elif status == AssignmentStatus.CLAIMABLE:
+                    self.claim(assignment, None, should_redispatch=False)
+                    claimed = True
+                    insight = True
+                elif status == AssignmentStatus.DISPATCHABLE:
+                    self.dispatch(assignment, None)
+                elif status == AssignmentStatus.DISPATCHED:
+                    self.dispatched[assignment] = datetime.now() + \
+                        self._get_assignment_time()
+        return claimed

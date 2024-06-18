@@ -164,6 +164,11 @@ class RogueEntry(RouteBase, RogueRewardHandler, RoguePathHandler, DungeonUI):
             if interval.reached() and self.is_page_rogue_main():
                 self.device.click(THEME_SWITCH)
                 interval.reset()
+            # Weekly refresh popup
+            if self.appear_then_click(REWARD_CLOSE, interval=2):
+                continue
+            if self.handle_reward():
+                continue
 
     def _rogue_world_set(self, world: int | DungeonList, skip_first_screenshot=True):
         """
@@ -318,8 +323,13 @@ class RogueEntry(RouteBase, RogueRewardHandler, RoguePathHandler, DungeonUI):
             if self.ui_page_appear(page_rogue):
                 break
 
+            # Additional
             if self.appear_then_click(REWARD_CLOSE, interval=2):
                 continue
+            # Popup that confirm character switch
+            if self.handle_popup_confirm():
+                continue
+            # Click
             if self.appear(page_guide.check_button, interval=2):
                 buttons = TELEPORT.match_multi_template(self.device.image)
                 if len(buttons):
@@ -350,11 +360,11 @@ class RogueEntry(RouteBase, RogueRewardHandler, RoguePathHandler, DungeonUI):
         if self.config.RogueDebug_DebugMode:
             # Always run
             return
-        
+
         if self.config.stored.SimulatedUniverseFarm.is_expired():
             # Expired, reset farming counter
             self.config.stored.SimulatedUniverseFarm.set(0)
-        
+
         if self.config.stored.SimulatedUniverse.is_expired():
             # Expired, do rogue
             pass
@@ -367,6 +377,9 @@ class RogueEntry(RouteBase, RogueRewardHandler, RoguePathHandler, DungeonUI):
                     'Reached weekly point limit but still continue to farm materials')
                 logger.attr(
                     "Farming Counter", self.config.stored.SimulatedUniverseFarm.to_counter())
+                if self.config.is_cloud_game and not self.config.stored.CloudRemainSeasonPass.value:
+                    logger.warning('Running WeeklyFarming on cloud game without season pass may cause fee, skip')
+                    raise RogueReachedWeeklyPointLimit
             else:
                 raise RogueReachedWeeklyPointLimit
         else:

@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 import cv2
 import numpy as np
 
 from module.base.timer import Timer
 from module.base.utils import crop
+from module.config.utils import DEFAULT_TIME, get_server_next_update
 from module.logger import logger
 from module.ocr.ocr import Ocr, OcrResultButton
 from module.ocr.utils import split_and_pair_buttons
@@ -31,10 +34,10 @@ class DailyQuestOcr(Ocr):
 
     def pre_process(self, image):
         image = super().pre_process(image)
-        image = crop(image, OCR_DAILY_QUEST.area)
+        image = crop(image, OCR_DAILY_QUEST.area, copy=False)
         mask = MASK_DAILY_QUEST.matched_button.image
         # Remove "+200Activity"
-        cv2.bitwise_and(image, mask, dst=image)
+        image = cv2.bitwise_and(image, mask)
         return image
 
     def after_process(self, result):
@@ -166,6 +169,7 @@ class DailyQuestUI(DungeonUI, RouteLoader):
         """
         self.claimed_point_reward will be set if claimed any point reward
         """
+
         def get_active():
             for b in [
                 ACTIVE_POINTS_1_UNLOCK,
@@ -245,7 +249,7 @@ class DailyQuestUI(DungeonUI, RouteLoader):
             int: Number of quests done
         """
         logger.hr('Recognize quests', level=1)
-        quests = self.daily_quests_recognition()
+        quests = self.config.stored.DailyQuest.load_quests()
 
         done = 0
         logger.hr('Do quests', level=1)
@@ -316,6 +320,62 @@ class DailyQuestUI(DungeonUI, RouteLoader):
 
         return done
 
+    def check_future_achieve(self):
+        """
+        Returns:
+            bool: True if daily activity will full, skip doing normal quests
+                False if daily activity will not full, do normal quests
+        """
+        point = self.config.stored.DailyActivity.value
+        if point >= self.config.stored.DailyActivity.FIXED_TOTAL:
+            logger.warning('DailyActivity full, no need to check future')
+            return True
+        quests = self.config.stored.DailyQuest.load_quests()
+        if not len(quests):
+            logger.warning('DailyQuest empty, cannot check future')
+            return True
+
+        # Get task schedule
+        assignment = self.config.cross_get('Assignment.Scheduler.NextRun', default=DEFAULT_TIME)
+        dungeon = self.config.cross_get('Dungeon.Scheduler.NextRun', default=DEFAULT_TIME)
+        reset = get_server_next_update(self.config.Scheduler_ServerUpdate)
+        logger.info(f'Assignment next run: {assignment}')
+        logger.info(f'Dungeon next run: {dungeon}')
+        logger.info(f'Daily reset: {reset}')
+
+        # Calculate quests to be done in the future
+        future = 0
+        if KEYWORDS_DAILY_QUEST.Obtain_victory_in_combat_with_Support_Characters_1_times in quests:
+            # 10min in advance to do quests
+            if dungeon < reset - timedelta(minutes=10):
+                logger.info('Daily support can be achieved in the future')
+                future += 200
+            else:
+                logger.info('Daily support cannot achieved, dungeon task is scheduled tomorrow')
+        if KEYWORDS_DAILY_QUEST.Consume_120_Trailblaze_Power in quests:
+            # 12h10min in advance, waiting for stamina
+            if dungeon < reset - timedelta(hours=12, minutes=10):
+                logger.info('Stamina consume can be achieved in the future')
+                future += 200
+            else:
+                logger.info('Stamina consume cannot achieved, dungeon task is scheduled tomorrow')
+        if KEYWORDS_DAILY_QUEST.Dispatch_1_assignments in quests:
+            # 10min in advance to do quests
+            if assignment < reset - timedelta(minutes=10):
+                logger.info('Assignment can be achieved in the future')
+                future += 100
+            else:
+                logger.info('Assignment cannot achieved, assignment task is scheduled tomorrow')
+
+        # Check
+        logger.attr('Future daily activity', future)
+        if point + future >= self.config.stored.DailyActivity.FIXED_TOTAL:
+            logger.info('Daily activity will full, skip doing normal quests')
+            return True
+        else:
+            logger.info('Daily activity will not full, do normal quests')
+            return False
+
     def run(self):
         if Login(config=self.config, device=self.device).accountSwtich:
             Login(config=self.config, device=self.device).ensureAccount()
@@ -327,6 +387,10 @@ class DailyQuestUI(DungeonUI, RouteLoader):
         for _ in range(5):
             got = self.get_daily_rewards()
             if got:
+                break
+            self.daily_quests_recognition()
+            future = self.check_future_achieve()
+            if future:
                 break
             done = self.do_daily_quests()
             if not done:

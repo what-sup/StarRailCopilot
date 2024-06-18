@@ -124,6 +124,11 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     logger.info(f'Failed to switch account to {self.account_info}. Please check whether the account is in the account list')
                     continue
                 
+            # Login
+            if self.is_in_login_confirm(interval=5):
+                self.device.click(LOGIN_CONFIRM)
+                login_success = True
+                continue
             if self.appear_then_click(USER_AGREEMENT_ACCEPT):
                 continue
             # Additional
@@ -171,6 +176,8 @@ class Login(switchAccount, UI, LoginAndroidCloud):
 
     def app_stop(self):
         logger.hr('App stop')
+        if self.config.is_cloud_game:
+            self.cloud_exit()
         self.device.app_stop()
 
     def app_start(self):
@@ -179,7 +186,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             self.cloud_ensure_ingame()
         else:
             self.device.app_start()
-        self.handle_app_login()
+            self.handle_app_login()
 
     def app_restart(self):
         logger.hr('App restart')
@@ -188,40 +195,5 @@ class Login(switchAccount, UI, LoginAndroidCloud):
             self.cloud_ensure_ingame()
         else:
             self.device.app_start()
-        self.handle_app_login()
+            self.handle_app_login()
         self.config.task_delay(server_update=True)
-
-    def cloud_start(self):
-        if not self.config.is_cloud_game:
-            return
-
-        logger.hr('Cloud start')
-        self.cloud_ensure_ingame()
-        self.handle_app_login()
-
-    def cloud_stop(self):
-        if not self.config.is_cloud_game:
-            return
-
-        logger.hr('Cloud stop')
-        self.app_stop()
-
-    def cloud_start(self):
-        if not self.config.is_cloud_game:
-            return
-
-        logger.hr('Cloud start')
-        self.cloud_ensure_ingame()
-        self.handle_app_login()
-
-    def cloud_stop(self):
-        if not self.config.is_cloud_game:
-            return
-
-        logger.hr('Cloud stop')
-        self.app_stop()
-
-if __name__ == '__main__':
-    self = Login('src')
-    self.device.screenshot()
-    self.handle_app_login()
