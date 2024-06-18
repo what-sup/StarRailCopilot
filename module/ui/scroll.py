@@ -218,7 +218,7 @@ class AdaptiveScroll(Scroll):
         """
         Args:
             area (Button, tuple): A button or area of the whole scroll.
-            prominence (dict): Parameters passing to scipy.find_peaks
+            parameters (dict): Parameters passing to scipy.find_peaks
             background (int):
             is_vertical (bool): True if vertical, false if horizontal.
             name (str):
@@ -248,6 +248,7 @@ class AdaptiveScroll(Scroll):
             'prominence': 30,
             'wlen': wlen,
             'width': 2,
+            # 'distance': wlen / 2,
         }
         parameters.update(self.parameters)
         peaks, _ = signal.find_peaks(image, **parameters)

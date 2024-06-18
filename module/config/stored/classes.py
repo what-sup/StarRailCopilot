@@ -132,6 +132,9 @@ class StoredExpiredAtMonday0400(StoredBase):
 class StoredInt(StoredBase):
     value = 0
 
+    def clear(self):
+        self.value = 0
+
 
 class StoredCounter(StoredBase):
     value = 0
@@ -145,6 +148,9 @@ class StoredCounter(StoredBase):
         with self._config.multi_set():
             self.value = value
             self.total = total
+
+    def clear(self):
+        self.value = 0
 
     def to_counter(self) -> str:
         return f'{self.value}/{self.total}'
@@ -283,6 +289,15 @@ class StoredDaily(StoredCounter, StoredExpiredAt0400):
             except IndexError:
                 self.quest6 = ''
 
+    def clear(self):
+        with self._config.multi_set():
+            self.quest1 = ''
+            self.quest2 = ''
+            self.quest3 = ''
+            self.quest4 = ''
+            self.quest5 = ''
+            self.quest6 = ''
+
 
 class StoredDungeonDouble(StoredExpiredAt0400):
     calyx = 0
@@ -298,7 +313,7 @@ class StoredBattlePassLevel(StoredCounter):
     FIXED_TOTAL = 70
 
 
-class StoredBattlePassWeeklyQuest(StoredCounter, StoredExpiredAt0400):
+class StoredBattlePassWeeklyQuest(StoredCounter, StoredExpiredAtMonday0400):
     quest1 = ''
     quest2 = ''
     quest3 = ''
@@ -365,6 +380,16 @@ class StoredBattlePassWeeklyQuest(StoredCounter, StoredExpiredAt0400):
             except IndexError:
                 self.quest7 = ''
 
+    def clear(self):
+        with self._config.multi_set():
+            self.quest1 = ''
+            self.quest2 = ''
+            self.quest3 = ''
+            self.quest4 = ''
+            self.quest5 = ''
+            self.quest6 = ''
+            self.quest7 = ''
+
 
 class StoredBattlePassSimulatedUniverse(StoredCounter):
     FIXED_TOTAL = 1
@@ -398,3 +423,14 @@ class StoredBattlePassQuestCavernOfCorrosion(StoredCounter):
 class StoredBattlePassQuestTrailblazePower(StoredCounter):
     # Dynamic total from 100 to 1400
     LIST_TOTAL = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+
+
+class StoredPlanner(StoredBase):
+    value: int
+    total: int
+    synthesize: int
+
+
+class StoredPlannerOverall(StoredBase):
+    value: str = '??%'
+    comment: str = '<??d'

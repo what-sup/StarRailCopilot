@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from module.config.stored.classes import now
+from module.config.utils import get_server_next_update
 from module.config.utils import DEFAULT_TIME
 from module.logger import logger
 from tasks.assignment.claim import AssignmentClaim
@@ -36,6 +38,10 @@ class Assignment(AssignmentClaim, SynthesizeUI):
             duration = self.config.Assignment_Duration
         if join_event is None:
             join_event = self.config.Assignment_Event
+
+        configDuration = duration
+        if duration == 24: 
+            duration = 20
 
         configDuration = duration
         if duration == 24: 
@@ -84,10 +90,21 @@ class Assignment(AssignmentClaim, SynthesizeUI):
                     delay = datetime.now() if abs(datetime.now() - scheduleTime) > timedelta(hours=2 * configDuration) else scheduleTime + timedelta(hours=configDuration)
                 logger.info(f'Delay assignment check to {str(delay)}')
                 self.config.task_delay(target=delay)
+                # Align server update
+                update = get_server_next_update(self.config.Scheduler_ServerUpdate)
+                if update - delay < timedelta(hours=4):
+                    logger.info('Approaching next day, delay to server update instead')
+                    self.config.task_delay(target=update)
             else:
                 # ValueError: min() arg is an empty sequence
                 logger.error('Empty dispatched list, delay 2 hours instead')
                 self.config.task_delay(minute=120)
+                # Check future daily
+                if now() > get_server_next_update(self.config.Scheduler_ServerUpdate) - timedelta(minutes=110) \
+                        and KEYWORDS_DAILY_QUEST.Dispatch_1_assignments in quests:
+                    logger.error(
+                        "Assigment is scheduled tomorrow but today's assignment daily haven't been finished yet")
+                    self.config.task_call('DailyQuest')
 
     def _check_inlist(self, assignments: list[AssignmentEntry], duration: int):
         """

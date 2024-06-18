@@ -1,3 +1,4 @@
+from module.base.decorator import set_cached_property
 from module.base.utils import area_offset
 from module.logger import logger
 from tasks.battle_pass.keywords import KEYWORDS_BATTLE_PASS_QUEST
@@ -6,6 +7,7 @@ from tasks.daily.keywords import KEYWORDS_DAILY_QUEST
 from tasks.dungeon.event import DungeonEvent
 from tasks.dungeon.keywords import DungeonList, KEYWORDS_DUNGEON_LIST, KEYWORDS_DUNGEON_NAV, KEYWORDS_DUNGEON_TAB
 from tasks.dungeon.stamina import DungeonStamina
+from tasks.item.synthesize import Synthesize
 from tasks.login.login import Login
 
 
@@ -76,7 +78,9 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
             if relic == 0:
                 return 0
         # Combat
+        self.dungeon = dungeon
         count = self.combat(team=team, wave_limit=wave_limit, support_character=support_character)
+        self.dungeon = None
 
         # Update quest states
         with self.config.multi_set():
@@ -133,7 +137,7 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
             # Support quest
             if support_character is not None:
                 self.called_daily_support = True
-                if KEYWORDS_DAILY_QUEST.Obtain_victory_in_combat_with_Support_Characters_1_times:
+                if KEYWORDS_DAILY_QUEST.Obtain_victory_in_combat_with_Support_Characters_1_times in self.daily_quests:
                     logger.info('Achieve daily quest Obtain_victory_in_combat_with_Support_Characters_1_times')
                     self.achieved_daily_quest = True
             '''
@@ -142,7 +146,10 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
 
             # Check trailblaze power, this may stop current task
             if self.is_trailblaze_power_exhausted():
+                # Scheduler
                 self.delay_dungeon_task(dungeon)
+                self.check_synthesize()
+                self.config.task_stop()
 
         return count
 
@@ -191,6 +198,7 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
 
         self.config.update_battle_pass_quests()
         self.config.update_daily_quests()
+        self.check_synthesize()
         self.called_daily_support = False
         self.achieved_daily_quest = False
         self.achieved_weekly_quest = False
@@ -228,26 +236,23 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                 self.config.stored.DungeonDouble.rogue = rogue
 
         # Run double events
-        ran_calyx_golden = False
-        ran_calyx_crimson = False
-        ran_cavern_of_corrosion = False
+        planner = self.planner.get_dungeon(double_calyx=True)
         # Double calyx
         if self.config.stored.DungeonDouble.calyx > 0:
             logger.info('Run double calyx')
             dungeon = DungeonList.find(self.config.Dungeon_NameAtDoubleCalyx)
+            if planner is not None:
+                dungeon = planner
+                self.is_doing_planner = True
             self.running_double = True
-            if self.dungeon_run(dungeon=dungeon, wave_limit=self.config.stored.DungeonDouble.calyx):
-                if dungeon.is_Calyx_Golden:
-                    ran_calyx_golden = True
-                if dungeon.is_Calyx_Crimson:
-                    ran_calyx_crimson = True
+            self.dungeon_run(dungeon=dungeon, wave_limit=self.config.stored.DungeonDouble.calyx)
+            self.is_doing_planner = False
         # Double relic
         if self.config.stored.DungeonDouble.relic > 0:
             logger.info('Run double relic')
             dungeon = DungeonList.find(self.config.Dungeon_NameAtDoubleRelic)
             self.running_double = True
-            if self.dungeon_run(dungeon=dungeon, wave_limit=self.config.stored.DungeonDouble.relic):
-                ran_cavern_of_corrosion = True
+            self.dungeon_run(dungeon=dungeon, wave_limit=self.config.stored.DungeonDouble.relic)
         self.running_double = False
 
         # Dungeon to clear all trailblaze power
@@ -260,43 +265,12 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                     and self.config.stored.DungeonDouble.rogue > 0:
                 logger.info('Going to use stamina in double rogue event')
                 do_rogue = True
-        if do_rogue:
-            final = KEYWORDS_DUNGEON_LIST.Simulated_Universe_World_1
-        else:
-            final = DungeonList.find(self.config.Dungeon_Name)
-
-        # Run dungeon that required by daily quests
-        # Calyx_Golden
-        if KEYWORDS_DAILY_QUEST.Clear_Calyx_Golden_1_times in self.daily_quests \
-                and self.config.DungeonDaily_CalyxGolden != 'do_not_achieve' \
-                and not final.is_Calyx_Golden \
-                and not ran_calyx_golden:
-            logger.info('Run Calyx_Golden once')
-            dungeon = DungeonList.find(self.config.DungeonDaily_CalyxGolden)
-            self.dungeon_run(dungeon=dungeon, wave_limit=1)
-        # Calyx_Crimson
-        if KEYWORDS_DAILY_QUEST.Clear_Calyx_Crimson_1_times in self.daily_quests \
-                and self.config.DungeonDaily_CalyxCrimson != 'do_not_achieve' \
-                and not final.is_Calyx_Crimson \
-                and not ran_calyx_crimson:
-            logger.info('Run Calyx_Crimson once')
-            dungeon = DungeonList.find(self.config.DungeonDaily_CalyxCrimson)
-            self.dungeon_run(dungeon=dungeon, wave_limit=1)
-        # Stagnant_Shadow
-        if KEYWORDS_DAILY_QUEST.Clear_Stagnant_Shadow_1_times in self.daily_quests \
-                and self.config.DungeonDaily_StagnantShadow != 'do_not_achieve' \
-                and not final.is_Stagnant_Shadow:
-            logger.info('Run Stagnant_Shadow once')
-            dungeon = DungeonList.find(self.config.DungeonDaily_StagnantShadow)
-            self.dungeon_run(dungeon=dungeon, wave_limit=1)
-        # Cavern_of_Corrosion
-        if KEYWORDS_DAILY_QUEST.Clear_Cavern_of_Corrosion_1_times in self.daily_quests \
-                and self.config.DungeonDaily_CavernOfCorrosion != 'do_not_achieve' \
-                and not final.is_Cavern_of_Corrosion \
-                and not ran_cavern_of_corrosion:
-            logger.info('Run Cavern_of_Corrosion once')
-            dungeon = DungeonList.find(self.config.DungeonDaily_CavernOfCorrosion)
-            self.dungeon_run(dungeon=dungeon, wave_limit=1)
+        final = DungeonList.find(self.config.Dungeon_Name)
+        # Planner
+        planner = self.planner.get_dungeon()
+        if planner is not None:
+            final = planner
+            self.is_doing_planner = True
 
         # Check daily
         if self.achieved_daily_quest:
@@ -307,11 +281,12 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
             self.config.task_stop()
 
         # Use all stamina
-        if final.is_Simulated_Universe:
+        if do_rogue:
             # Use support if prioritize rogue
             if self.require_compulsory_support():
                 logger.info('Run dungeon with support once as stamina is rogue prioritized')
-                self.dungeon_run(dungeon=DungeonList.find(self.config.Dungeon_Name), wave_limit=1)
+                self.dungeon_run(dungeon=final, wave_limit=1)
+                self.is_doing_planner = False
             # Store immersifiers
             logger.info('Prioritize stamina for simulated universe, skip dungeon')
             amount = 0
@@ -327,11 +302,24 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                     # Schedule behind rogue
                     self.config.task_delay(minute=5)
                     self.config.task_call('Rogue')
+                # Scheduler
                 self.delay_dungeon_task(KEYWORDS_DUNGEON_LIST.Simulated_Universe_World_1)
+                self.config.task_stop()
         else:
             # Combat
             self.dungeon_run(final)
+            self.is_doing_planner = False
+            # Scheduler
             self.delay_dungeon_task(final)
+            self.check_synthesize()
+            self.config.task_stop()
+
+    def check_synthesize(self):
+        logger.info('Check synthesize')
+        synthesize = Synthesize(config=self.config, device=self.device, task=self.config.task.command)
+        set_cached_property(synthesize, 'planner', self.planner)
+        if synthesize.synthesize_needed():
+            synthesize.synthesize_planner()
 
     def delay_dungeon_task(self, dungeon: DungeonList):
         logger.attr('achieved_daily_quest', self.achieved_daily_quest)
@@ -343,10 +331,14 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
             # Check daily
             if self.achieved_daily_quest:
                 self.config.task_call('DailyQuest')
+            else:
+                # Check future daily
+                if KEYWORDS_DAILY_QUEST.Obtain_victory_in_combat_with_Support_Characters_1_times in self.daily_quests:
+                    logger.error("Dungeon ran but support daily haven't been finished yet")
+                    self.config.task_call('DailyQuest')
+
             # Delay tasks
             self.dungeon_stamina_delay(dungeon)
-
-        self.config.task_stop()
 
     def handle_destructible_around_blaze(self):
         """

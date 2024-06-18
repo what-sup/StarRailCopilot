@@ -4,9 +4,10 @@ from module.base.timer import Timer
 from module.logger import logger
 from module.ocr.ocr import Digit
 from tasks.base.page import page_item
-from tasks.base.ui import UI
 from tasks.item.assets.assets_item_data import OCR_DATA
-from tasks.login.login import Login
+from tasks.item.keywords import KEYWORDS_ITEM_TAB
+from tasks.item.ui import ItemUI
+from tasks.planner.model import PlannerMixin
 
 
 class DataDigit(Digit):
@@ -14,9 +15,10 @@ class DataDigit(Digit):
         result = re.sub(r'[l|]', '1', result)
         result = re.sub(r'[oO]', '0', result)
         return super().after_process(result)
+from tasks.login.login import Login
 
 
-class DataUpdate(UI):
+class DataUpdate(ItemUI, PlannerMixin):
     def _get_data(self):
         """
         Page:
@@ -40,17 +42,24 @@ class DataUpdate(UI):
 
         logger.attr('Credit', credit)
         logger.attr('StellarJade', jade)
-        with self.config.multi_set():
-            self.config.stored.Credit.value = credit
-            self.config.stored.StallerJade.value = jade
-
         return credit, jade
 
     def run(self):
         if Login(config=self.config, device=self.device).accountSwtich:
             Login(config=self.config, device=self.device).ensureAccount()
         self.ui_ensure(page_item, acquire_lang_checked=False)
+        # item tab stays at the last used tab, switch to UpgradeMaterials
+        self.item_goto(KEYWORDS_ITEM_TAB.UpgradeMaterials, wait_until_stable=False)
+
+        credit, jade = self._get_data()
 
         with self.config.multi_set():
-            self._get_data()
+            self.config.stored.Credit.value = credit
+            self.config.stored.StallerJade.value = jade
             self.config.task_delay(server_update=True)
+            # Sync to planner
+            require = self.config.cross_get('Dungeon.Planner.Item_Credit.total', default=0)
+            if require:
+                self.config.cross_set('Dungeon.Planner.Item_Credit.value', credit)
+                self.config.cross_set('Dungeon.Planner.Item_Credit.time', self.config.stored.Credit.time)
+                self.planner_write()

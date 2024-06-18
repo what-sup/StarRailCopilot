@@ -106,17 +106,22 @@ class AzurLaneConfig(ConfigUpdater, ManualConfig, GeneratedConfig, ConfigWatcher
             logger.info("Using template config, which is read only")
             self.auto_update = False
             self.task = name_to_function("template")
+        self.init_task(task)
+
+    def init_task(self, task=None):
+        if self.is_template_config:
+            return
+
+        self.load()
+        if task is None:
+            # Bind `Alas` by default which includes emulator settings.
+            task = name_to_function("Alas")
         else:
-            self.load()
-            if task is None:
-                # Bind `Alas` by default which includes emulator settings.
-                task = name_to_function("Alas")
-            else:
-                # Bind a specific task for debug purpose.
-                task = name_to_function(task)
-            self.bind(task)
-            self.task = task
-            self.save()
+            # Bind a specific task for debug purpose.
+            task = name_to_function(task)
+        self.bind(task)
+        self.task = task
+        self.save()
 
     def load(self):
         self.data = self.read_file(self.config_name)
@@ -293,6 +298,7 @@ class AzurLaneConfig(ConfigUpdater, ManualConfig, GeneratedConfig, ConfigWatcher
                     deep_set(self.data, keys=f"{task}.Scheduler.NextRun", value=now)
 
         limit_next_run(['BattlePass'], limit=now + timedelta(days=40, seconds=-1))
+        limit_next_run(['Weekly'], limit=now + timedelta(days=7, seconds=-1))
         limit_next_run(self.args.keys(), limit=now + timedelta(hours=24, seconds=-1))
 
     def override(self, **kwargs):
@@ -504,14 +510,13 @@ class AzurLaneConfig(ConfigUpdater, ManualConfig, GeneratedConfig, ConfigWatcher
         Raises:
             TaskEnd: Call task `DailyQuest` and stop current task
         """
-        if self.stored.DailyActivity.is_expired():
-            logger.info('DailyActivity expired, call task to update')
-            self.task_call('DailyQuest')
-            self.task_stop()
-        if self.stored.DailyQuest.is_expired():
-            logger.info('DailyQuest expired, call task to update')
-            self.task_call('DailyQuest')
-            self.task_stop()
+        with self.multi_set():
+            if self.stored.DailyActivity.is_expired():
+                logger.info('DailyActivity expired')
+                self.stored.DailyActivity.clear()
+            if self.stored.DailyQuest.is_expired():
+                logger.info('DailyQuest expired')
+                self.stored.DailyQuest.clear()
 
     def update_battle_pass_quests(self):
         """
@@ -522,9 +527,8 @@ class AzurLaneConfig(ConfigUpdater, ManualConfig, GeneratedConfig, ConfigWatcher
             if self.stored.BattlePassLevel.is_full():
                 logger.info('BattlePassLevel full, no updates')
             else:
-                logger.info('BattlePassTodayQuest expired, call task to update')
-                self.task_call('BattlePass')
-                self.task_stop()
+                logger.info('BattlePassTodayQuest expired')
+                self.stored.BattlePassWeeklyQuest.clear()
 
     @property
     def DEVICE_SCREENSHOT_METHOD(self):
