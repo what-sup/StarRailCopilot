@@ -4,10 +4,9 @@ from scipy import signal
 
 from module.base.base import ModuleBase
 from module.base.button import ButtonWrapper
-from module.base.decorator import cached_property, del_cached_property
+from module.base.decorator import cached_property
 from module.base.timer import Timer
 from module.base.utils import Lines, area_center, area_offset, color_similarity_2d
-from module.exception import ScriptError
 from module.logger import logger
 
 
@@ -71,6 +70,8 @@ class InventoryManager:
     ERROR_LINES_TOLERANCE = (-10, 10)
     COINCIDENT_POINT_ENCOURAGE_DISTANCE = 1.
 
+    MAXIMUM_ITEMS = 30
+
     def __init__(self, main: ModuleBase, inventory: ButtonWrapper):
         """
         max_count: expected max count of this inventory page
@@ -93,14 +94,16 @@ class InventoryManager:
         count = len(mids)
         if count == 1:
             return mids
-        elif count == 2:
-            # Only one row, [173.5 175. ]
-            mid_diff_mean = np.mean(mid_diff_range)
-            diff = max(mids) - min(mids)
-            if diff < mid_diff_mean * 0.3:
-                return np.mean(mids).reshape((1,))
-            # Double rows
+
+        # Only one row, [173.5 175. ]
+        mid_diff_mean = np.mean(mid_diff_range)
+        diff = max(mids) - min(mids)
+        if diff < mid_diff_mean * 0.3:
+            return np.mean(mids).reshape((1,))
+        # Double rows
+        if count == 2:
             return mids
+
         # print(mids)
         encourage = self.COINCIDENT_POINT_ENCOURAGE_DISTANCE ** 2
 
@@ -163,7 +166,7 @@ class InventoryManager:
         image_item = cv2.inRange(image, 221, 255)
 
         # from PIL import Image
-        # Image.fromarray(image_star).show()
+        # Image.fromarray(image_item).show()
 
         def iter_area(im):
             # Iter matched area from given image
@@ -218,8 +221,12 @@ class InventoryManager:
                         yield InventoryItem(main=self.main, loca=(xi, yi), point=(int(x), int(y)))
                 elif y == y_max:
                     # Fill until the last item
+                    x_max = -1
                     for xi, x in enumerate(x_list):
                         if is_near_existing((x, y)):
+                            x_max = xi
+                    for xi, x in enumerate(x_list):
+                        if xi <= x_max:
                             yield InventoryItem(main=self.main, loca=(xi, yi), point=(int(x), int(y)))
                 else:
                     break
@@ -244,7 +251,10 @@ class InventoryManager:
         else:
             self.selected = selected[0]
 
-        logger.info(f'Inventory: {len(self.items)} items, selected {self.selected}')
+        count = len(self.items)
+        logger.info(f'Inventory: {count} items, selected {self.selected}')
+        if count > self.MAXIMUM_ITEMS:
+            logger.warning('Too many inventory items detected')
 
     def get_row_first(self, row=1, first=0) -> InventoryItem | None:
         """
@@ -288,12 +298,9 @@ class InventoryManager:
     def select(self, item, skip_first_screenshot=True):
         logger.info(f'Inventory select {item}')
         if isinstance(item, InventoryItem):
-            pass
+            loca = item.loca
         else:
-            try:
-                item = self.items[item]
-            except KeyError:
-                raise ScriptError(f'Inventory select {item} but is not in current items')
+            loca = item
 
         interval = Timer(2, count=6)
         while 1:
@@ -302,8 +309,16 @@ class InventoryManager:
             else:
                 self.main.device.screenshot()
 
+            self.update()
+            if len(self.items) > self.MAXIMUM_ITEMS:
+                continue
+            try:
+                item = self.items[loca]
+            except KeyError:
+                logger.warning(f'Item {loca} is not in inventory, cannot select')
+                continue
+
             # End
-            del_cached_property(item, 'is_selected')
             if item.is_selected:
                 logger.info('Inventory item selected')
                 break
@@ -311,10 +326,16 @@ class InventoryManager:
             if interval.reached():
                 self.main.device.click(item)
                 interval.reset()
-
-        self.update()
+                continue
 
     def wait_selected(self, skip_first_screenshot=True):
+        """
+        Args:
+            skip_first_screenshot:
+
+        Returns:
+            bool: If success
+        """
         timeout = Timer(2, count=6).start()
         while 1:
             if skip_first_screenshot:
@@ -323,8 +344,10 @@ class InventoryManager:
                 self.main.device.screenshot()
 
             self.update()
-            if self.selected is not None:
-                break
             if timeout.reached():
                 logger.warning('Wait inventory selected timeout')
-                break
+                return False
+            if len(self.items) > self.MAXIMUM_ITEMS:
+                continue
+            if self.selected is not None:
+                return True
