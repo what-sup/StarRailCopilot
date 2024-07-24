@@ -101,42 +101,6 @@
     "order": 8,
     "color": "#fc8f8b"
   },
-  "CloudRemainSeasonPass": {
-    "name": "CloudRemainSeasonPass",
-    "path": "Alas.CloudStorage.CloudRemainSeasonPass",
-    "i18n": "CloudStorage.CloudRemainSeasonPass.name",
-    "stored": "StoredInt",
-    "attrs": {
-      "time": "2020-01-01 00:00:00",
-      "value": 0
-    },
-    "order": 0,
-    "color": "#777777"
-  },
-  "CloudRemainPaid": {
-    "name": "CloudRemainPaid",
-    "path": "Alas.CloudStorage.CloudRemainPaid",
-    "i18n": "CloudStorage.CloudRemainPaid.name",
-    "stored": "StoredInt",
-    "attrs": {
-      "time": "2020-01-01 00:00:00",
-      "value": 0
-    },
-    "order": 0,
-    "color": "#777777"
-  },
-  "CloudRemainFree": {
-    "name": "CloudRemainFree",
-    "path": "Alas.CloudStorage.CloudRemainFree",
-    "i18n": "CloudStorage.CloudRemainFree.name",
-    "stored": "StoredInt",
-    "attrs": {
-      "time": "2020-01-01 00:00:00",
-      "value": 0
-    },
-    "order": 0,
-    "color": "#777777"
-  },
   "Item_Credit": {
     "name": "Item_Credit",
     "path": "Dungeon.Planner.Item_Credit",
@@ -467,10 +431,10 @@
     "order": 0,
     "color": "#777777"
   },
-  "Item_Moon_Madness_Fang": {
-    "name": "Item_Moon_Madness_Fang",
-    "path": "Dungeon.Planner.Item_Moon_Madness_Fang",
-    "i18n": "Planner.Item_Moon_Madness_Fang.name",
+  "Item_Moon_Rage_Fang": {
+    "name": "Item_Moon_Rage_Fang",
+    "path": "Dungeon.Planner.Item_Moon_Rage_Fang",
+    "i18n": "Planner.Item_Moon_Rage_Fang.name",
     "stored": "StoredPlanner",
     "attrs": {
       "time": "2020-01-01 00:00:00"
@@ -482,6 +446,17 @@
     "name": "Item_Countertemporal_Shot",
     "path": "Dungeon.Planner.Item_Countertemporal_Shot",
     "i18n": "Planner.Item_Countertemporal_Shot.name",
+    "stored": "StoredPlanner",
+    "attrs": {
+      "time": "2020-01-01 00:00:00"
+    },
+    "order": 0,
+    "color": "#777777"
+  },
+  "Item_Exquisite_Colored_Draft": {
+    "name": "Item_Exquisite_Colored_Draft",
+    "path": "Dungeon.Planner.Item_Exquisite_Colored_Draft",
+    "i18n": "Planner.Item_Exquisite_Colored_Draft.name",
     "stored": "StoredPlanner",
     "attrs": {
       "time": "2020-01-01 00:00:00"
@@ -740,7 +715,9 @@
       "quest4": "",
       "quest5": "",
       "quest6": "",
-      "total": 6,
+      "quest7": "",
+      "quest8": "",
+      "total": 8,
       "value": 0
     },
     "order": 0,
@@ -831,6 +808,19 @@
     "order": 0,
     "color": "#777777"
   },
+  "BattlePassQuestStagnantShadow": {
+    "name": "BattlePassQuestStagnantShadow",
+    "path": "BattlePass.BattlePassStorage.BattlePassQuestStagnantShadow",
+    "i18n": "BattlePassStorage.BattlePassQuestStagnantShadow.name",
+    "stored": "StoredBattlePassQuestStagnantShadow",
+    "attrs": {
+      "time": "2020-01-01 00:00:00",
+      "total": 3,
+      "value": 0
+    },
+    "order": 0,
+    "color": "#777777"
+  },
   "BattlePassQuestCavernOfCorrosion": {
     "name": "BattlePassQuestCavernOfCorrosion",
     "path": "BattlePass.BattlePassStorage.BattlePassQuestCavernOfCorrosion",
@@ -852,6 +842,42 @@
     "attrs": {
       "time": "2020-01-01 00:00:00",
       "total": 0,
+      "value": 0
+    },
+    "order": 0,
+    "color": "#777777"
+  },
+  "CloudRemainSeasonPass": {
+    "name": "CloudRemainSeasonPass",
+    "path": "DataUpdate.CloudStorage.CloudRemainSeasonPass",
+    "i18n": "CloudStorage.CloudRemainSeasonPass.name",
+    "stored": "StoredInt",
+    "attrs": {
+      "time": "2020-01-01 00:00:00",
+      "value": 0
+    },
+    "order": 0,
+    "color": "#777777"
+  },
+  "CloudRemainPaid": {
+    "name": "CloudRemainPaid",
+    "path": "DataUpdate.CloudStorage.CloudRemainPaid",
+    "i18n": "CloudStorage.CloudRemainPaid.name",
+    "stored": "StoredInt",
+    "attrs": {
+      "time": "2020-01-01 00:00:00",
+      "value": 0
+    },
+    "order": 0,
+    "color": "#777777"
+  },
+  "CloudRemainFree": {
+    "name": "CloudRemainFree",
+    "path": "DataUpdate.CloudStorage.CloudRemainFree",
+    "i18n": "CloudStorage.CloudRemainFree.name",
+    "stored": "StoredInt",
+    "attrs": {
+      "time": "2020-01-01 00:00:00",
       "value": 0
     },
     "order": 0,

@@ -131,13 +131,15 @@ class DungeonState(UI):
         """
         Delay tasks that use stamina
         """
-        if dungeon.is_Simulated_Universe:
+        if dungeon.is_Simulated_Universe or dungeon.is_Ornament_Extraction:
             limit = 80
         elif dungeon.is_Cavern_of_Corrosion:
             limit = 120
         elif dungeon.is_Echo_of_War:
             limit = 30
         else:
+            limit = 120
+        if self.config.is_cloud_game:
             limit = 120
             
         # Double event is not yet finished, do it today as possible
@@ -181,23 +183,9 @@ class DungeonState(UI):
             future = next_monday
 
         tasks = ['Dungeon', 'Weekly']
-
-        if self.config.cross_get(keys=f'Dungeon.DungeonMode.Mode', default='auto') == 'timer':
+        with self.config.multi_set():
             for task in tasks:
-                scheduleTime = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
-                interval = int(self.config.cross_get(keys=f'{task}.DungeonMode.Delay', default='12'))
-                future = get_server_next_update(self.config.Scheduler_ServerUpdate)
-                while future - timedelta(hours=interval) > now():
-                    future -= timedelta(hours=interval)
-                self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
-        else:
-            with self.config.multi_set():
-                for task in tasks:
-                    next_run = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
-                    if future > next_run:
-                        logger.info(f"Delay task `{task}` to {future}")
-                        self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)
-
-if __name__ == '__main__':
-    self = DungeonState('src')
-    self.dungeon_stamina_delay()
+                next_run = self.config.cross_get(keys=f'{task}.Scheduler.NextRun', default=DEFAULT_TIME)
+                if future > next_run:
+                    logger.info(f"Delay task `{task}` to {future}")
+                    self.config.cross_set(keys=f'{task}.Scheduler.NextRun', value=future)

@@ -98,8 +98,8 @@ class PlatformWindows(PlatformBase, EmulatorManager):
             # Nox.exe -clone:Nox_1
             self.execute(f'"{exe}" -clone:{instance.name}')
         elif instance == Emulator.BlueStacks5:
-            # HD-Player.exe -instance Pie64
-            self.execute(f'"{exe}" -instance {instance.name}')
+            # HD-Player.exe --instance Pie64
+            self.execute(f'"{exe}" --instance {instance.name}')
         elif instance == Emulator.BlueStacks4:
             # BlueStacks\Client\Bluestacks.exe -vmname Android_1
             self.execute(f'"{exe}" -vmname {instance.name}')
@@ -221,7 +221,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
             logger.info(f'Found azurlane packages: {m}')
 
         interval = Timer(0.5).start()
-        timeout = Timer(300).start()
+        timeout = Timer(180).start()
         new_window = 0
         while 1:
             interval.wait()

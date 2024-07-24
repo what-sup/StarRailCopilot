@@ -62,6 +62,10 @@
       "name": "Simulated Universe",
       "help": ""
     },
+    "Ornament": {
+      "name": "Ornament",
+      "help": "The followings must be satisfied:\n1. Manually clear Divergent Universe once this week and have a save file.\n2. Enter the dungeon once on current device to have dungeon team saved."
+    },
     "Daemon": {
       "name": "Dialogue Clicker",
       "help": ""
@@ -250,24 +254,6 @@
       "close_game": "Close Game"
     }
   },
-  "CloudStorage": {
-    "_info": {
-      "name": "CloudStorage._info.name",
-      "help": "CloudStorage._info.help"
-    },
-    "CloudRemainSeasonPass": {
-      "name": "CloudStorage.CloudRemainSeasonPass.name",
-      "help": "CloudStorage.CloudRemainSeasonPass.help"
-    },
-    "CloudRemainPaid": {
-      "name": "CloudStorage.CloudRemainPaid.name",
-      "help": "CloudStorage.CloudRemainPaid.help"
-    },
-    "CloudRemainFree": {
-      "name": "CloudStorage.CloudRemainFree.name",
-      "help": "CloudStorage.CloudRemainFree.help"
-    }
-  },
   "DungeonMode": {
     "_info": {
       "name": "DungeonMode._info.name",
@@ -310,6 +296,7 @@
       "Calyx_Crimson_Abundance_Jarilo_BackwaterPass": "Trace: Abundance (Backwater Pass)",
       "Calyx_Crimson_Abundance_Luofu_FyxestrollGarden": "Trace: Abundance (Fyxestroll Garden)",
       "Calyx_Crimson_Erudition_Jarilo_RivetTown": "Trace: Erudition (Rivet Town)",
+      "Calyx_Crimson_Erudition_Penacony_PenaconyGrandTheater": "Trace: Erudition (Penacony Grand Theater)",
       "Calyx_Crimson_Harmony_Jarilo_RobotSettlement": "Trace: The Harmony (Robot Settlement)",
       "Calyx_Crimson_Harmony_Penacony_TheReverieDreamscape": "Trace: The Harmony (The Reverie (Dreamscape))",
       "Calyx_Crimson_Nihility_Jarilo_GreatMine": "Trace: Nihility (Great Mine)",
@@ -319,7 +306,7 @@
       "Stagnant_Shadow_Duty": "Ascension: Physical (Boothill / Robin)",
       "Stagnant_Shadow_Blaze": "Ascension: Fire (Himeko / Asta / Hook)",
       "Stagnant_Shadow_Scorch": "Ascension: Fire (Guinaifen / Topaz & Numby)",
-      "Stagnant_Shadow_Ire": "Ascension: Fire (Gallagher)",
+      "Stagnant_Shadow_Ire": "Ascension: Fire (Firefly / Gallagher)",
       "Stagnant_Shadow_Rime": "Ascension: Ice (March 7th / Herta / Gepard / Pela)",
       "Stagnant_Shadow_Icicle": "Ascension: Ice (Yanqing / Jingliu / Ruan Mei)",
       "Stagnant_Shadow_Nectar": "Ascension: Ice (Misha)",
@@ -329,18 +316,19 @@
       "Stagnant_Shadow_Celestial": "Ascension: Wind (Blade / Huohuo / Black Swan)",
       "Stagnant_Shadow_Quanta": "Ascension: Quantum (Silver Wolf / Seele / Qingque)",
       "Stagnant_Shadow_Abomination": "Ascension: Quantum (Lynx / Fu Xuan / Xueyi)",
-      "Stagnant_Shadow_Roast": "Ascension: Quantum (Sparkle)",
+      "Stagnant_Shadow_Roast": "Ascension: Quantum (Jade / Sparkle)",
       "Stagnant_Shadow_Mirage": "Ascension: Imaginary (Welt / Luocha / Yukong)",
       "Stagnant_Shadow_Puppetry": "Ascension: Imaginary (Dan Heng • Imbibitor Lunae / Aventurine / Dr. Ratio)",
-      "Cavern_of_Corrosion_Path_of_Gelid_Wind": "Relics: Ice Set & Wind Set (Path of Gelid Wind) (Cavern of Corrosion: Path of Gelid Wind)",
-      "Cavern_of_Corrosion_Path_of_Jabbing_Punch": "Relics: Physical Set & Break Effect Set (Path of Jabbing Punch) (Cavern of Corrosion: Path of Jabbing Punch)",
-      "Cavern_of_Corrosion_Path_of_Drifting": "Relics: Healing Set & Musketeer Set (Path of Drifting) (Cavern of Corrosion: Path of Drifting)",
-      "Cavern_of_Corrosion_Path_of_Providence": "Relics: Guard Set & Quantum Set (Path of Providence) (Cavern of Corrosion: Path of Providence)",
-      "Cavern_of_Corrosion_Path_of_Holy_Hymn": "Relics: DEF Set & Lighting Set (Path of Holy Hymn) (Cavern of Corrosion: Path of Holy Hymn)",
-      "Cavern_of_Corrosion_Path_of_Conflagration": "Relics: Fire Set & Imaginary Set (Path of Conflagration) (Cavern of Corrosion: Path of Conflagration)",
-      "Cavern_of_Corrosion_Path_of_Elixir_Seekers": "Relics: HP Set & SPD Set (Path of Elixir Seekers) (Cavern of Corrosion: Path of Elixir Seekers)",
-      "Cavern_of_Corrosion_Path_of_Darkness": "Relics: Pursuit Set & Dot Set (Path of Darkness) (Cavern of Corrosion: Path of Darkness)",
-      "Cavern_of_Corrosion_Path_of_Dreamdive": "Relics: Debuff Set & Break Effect Set (Path of Dreamdive) (Cavern of Corrosion: Path of Dreamdive)"
+      "Cavern_of_Corrosion_Path_of_Gelid_Wind": "Relics: Ice Set & Wind Set (Path of Gelid Wind)",
+      "Cavern_of_Corrosion_Path_of_Jabbing_Punch": "Relics: Physical Set & Break Effect Set (Path of Jabbing Punch)",
+      "Cavern_of_Corrosion_Path_of_Drifting": "Relics: Healing Set & Musketeer Set (Path of Drifting)",
+      "Cavern_of_Corrosion_Path_of_Providence": "Relics: Guard Set & Quantum Set (Path of Providence)",
+      "Cavern_of_Corrosion_Path_of_Holy_Hymn": "Relics: DEF Set & Lighting Set (Path of Holy Hymn)",
+      "Cavern_of_Corrosion_Path_of_Conflagration": "Relics: Fire Set & Imaginary Set (Path of Conflagration)",
+      "Cavern_of_Corrosion_Path_of_Elixir_Seekers": "Relics: HP Set & SPD Set (Path of Elixir Seekers)",
+      "Cavern_of_Corrosion_Path_of_Darkness": "Relics: Pursuit Set & Dot Set (Path of Darkness)",
+      "Cavern_of_Corrosion_Path_of_Dreamdive": "Relics: Debuff Set & Break Effect Set (Path of Dreamdive)",
+      "Cavern_of_Corrosion_Path_of_Cavalier": "Relics: Super Break Set & Pursuit Ultimate Set (Path of Cavalier)"
     },
     "NameAtDoubleCalyx": {
       "name": "At Double Calyx Event, choose dungeon",
@@ -363,6 +351,7 @@
       "Calyx_Crimson_Abundance_Jarilo_BackwaterPass": "Trace: Abundance (Backwater Pass)",
       "Calyx_Crimson_Abundance_Luofu_FyxestrollGarden": "Trace: Abundance (Fyxestroll Garden)",
       "Calyx_Crimson_Erudition_Jarilo_RivetTown": "Trace: Erudition (Rivet Town)",
+      "Calyx_Crimson_Erudition_Penacony_PenaconyGrandTheater": "Trace: Erudition (Penacony Grand Theater)",
       "Calyx_Crimson_Harmony_Jarilo_RobotSettlement": "Trace: The Harmony (Robot Settlement)",
       "Calyx_Crimson_Harmony_Penacony_TheReverieDreamscape": "Trace: The Harmony (The Reverie (Dreamscape))",
       "Calyx_Crimson_Nihility_Jarilo_GreatMine": "Trace: Nihility (Great Mine)",
@@ -371,15 +360,16 @@
     "NameAtDoubleRelic": {
       "name": "At Double Relic Event, choose dungeon",
       "help": "Return to the default dungeon settings after double times exhausted",
-      "Cavern_of_Corrosion_Path_of_Gelid_Wind": "Relics: Ice Set & Wind Set (Path of Gelid Wind) (Cavern of Corrosion: Path of Gelid Wind)",
-      "Cavern_of_Corrosion_Path_of_Jabbing_Punch": "Relics: Physical Set & Break Effect Set (Path of Jabbing Punch) (Cavern of Corrosion: Path of Jabbing Punch)",
-      "Cavern_of_Corrosion_Path_of_Drifting": "Relics: Healing Set & Musketeer Set (Path of Drifting) (Cavern of Corrosion: Path of Drifting)",
-      "Cavern_of_Corrosion_Path_of_Providence": "Relics: Guard Set & Quantum Set (Path of Providence) (Cavern of Corrosion: Path of Providence)",
-      "Cavern_of_Corrosion_Path_of_Holy_Hymn": "Relics: DEF Set & Lighting Set (Path of Holy Hymn) (Cavern of Corrosion: Path of Holy Hymn)",
-      "Cavern_of_Corrosion_Path_of_Conflagration": "Relics: Fire Set & Imaginary Set (Path of Conflagration) (Cavern of Corrosion: Path of Conflagration)",
-      "Cavern_of_Corrosion_Path_of_Elixir_Seekers": "Relics: HP Set & SPD Set (Path of Elixir Seekers) (Cavern of Corrosion: Path of Elixir Seekers)",
-      "Cavern_of_Corrosion_Path_of_Darkness": "Relics: Pursuit Set & Dot Set (Path of Darkness) (Cavern of Corrosion: Path of Darkness)",
-      "Cavern_of_Corrosion_Path_of_Dreamdive": "Relics: Debuff Set & Break Effect Set (Path of Dreamdive) (Cavern of Corrosion: Path of Dreamdive)"
+      "Cavern_of_Corrosion_Path_of_Gelid_Wind": "Relics: Ice Set & Wind Set (Path of Gelid Wind)",
+      "Cavern_of_Corrosion_Path_of_Jabbing_Punch": "Relics: Physical Set & Break Effect Set (Path of Jabbing Punch)",
+      "Cavern_of_Corrosion_Path_of_Drifting": "Relics: Healing Set & Musketeer Set (Path of Drifting)",
+      "Cavern_of_Corrosion_Path_of_Providence": "Relics: Guard Set & Quantum Set (Path of Providence)",
+      "Cavern_of_Corrosion_Path_of_Holy_Hymn": "Relics: DEF Set & Lighting Set (Path of Holy Hymn)",
+      "Cavern_of_Corrosion_Path_of_Conflagration": "Relics: Fire Set & Imaginary Set (Path of Conflagration)",
+      "Cavern_of_Corrosion_Path_of_Elixir_Seekers": "Relics: HP Set & SPD Set (Path of Elixir Seekers)",
+      "Cavern_of_Corrosion_Path_of_Darkness": "Relics: Pursuit Set & Dot Set (Path of Darkness)",
+      "Cavern_of_Corrosion_Path_of_Dreamdive": "Relics: Debuff Set & Break Effect Set (Path of Dreamdive)",
+      "Cavern_of_Corrosion_Path_of_Cavalier": "Relics: Super Break Set & Pursuit Ultimate Set (Path of Cavalier)"
     },
     "Team": {
       "name": "Dungeon Team",
@@ -393,6 +383,24 @@
       "7": "7",
       "8": "8",
       "9": "9"
+    }
+  },
+  "TrailblazePower": {
+    "_info": {
+      "name": "TrailblazePower Settings",
+      "help": ""
+    },
+    "ExtractReservedTrailblazePower": {
+      "name": "Extract reserve exploration power",
+      "help": ""
+    },
+    "UseFuel": {
+      "name": "Use Fuel",
+      "help": ""
+    },
+    "FuelReserve": {
+      "name": "Reserve X Fuel",
+      "help": ""
     }
   },
   "DungeonSupport": {
@@ -425,6 +433,7 @@
       "DanHeng": "Dan Heng",
       "DanHengImbibitorLunae": "Dan Heng • Imbibitor Lunae",
       "DrRatio": "Dr. Ratio",
+      "Firefly": "Firefly",
       "FuXuan": "Fu Xuan",
       "Gallagher": "Gallagher",
       "Gepard": "Gepard",
@@ -466,8 +475,8 @@
   },
   "DungeonStorage": {
     "_info": {
-      "name": "DungeonStorage._info.name",
-      "help": "DungeonStorage._info.help"
+      "name": "Dungeon",
+      "help": ""
     },
     "TrailblazePower": {
       "name": "Power",
@@ -590,7 +599,7 @@
       "help": ""
     },
     "Item_Raging_Heart": {
-      "name": "Ascension: Fire (Gallagher)",
+      "name": "Ascension: Fire (Firefly / Gallagher)",
       "help": ""
     },
     "Item_Dream_Fridge": {
@@ -598,7 +607,7 @@
       "help": ""
     },
     "Item_Dream_Flamer": {
-      "name": "Ascension: Quantum (Sparkle)",
+      "name": "Ascension: Quantum (Jade / Sparkle)",
       "help": ""
     },
     "Item_Worldbreaker_Blade": {
@@ -629,12 +638,16 @@
       "name": "Trace: Abundance (Backwater Pass)",
       "help": ""
     },
-    "Item_Moon_Madness_Fang": {
+    "Item_Moon_Rage_Fang": {
       "name": "Trace: Destruction (Scalegorge Waterscape)",
       "help": ""
     },
     "Item_Countertemporal_Shot": {
       "name": "Trace: The Hunt (SoulGlad Scorchsand Audition Venue)",
+      "help": ""
+    },
+    "Item_Exquisite_Colored_Draft": {
+      "name": "Trace: Erudition (Penacony Grand Theater)",
       "help": ""
     },
     "Item_Divine_Amber": {
@@ -738,198 +751,10 @@
       "9": "9"
     }
   },
-  "AchievableQuest": {
-    "_info": {
-      "name": "Achievable Quests",
-      "help": "When the task status is \"Not Set\", you need to configure the SRC as required to achieve the quest\nNote: Please keep more tasks in \"Achievable\" status, otherwise SRC may not be able to grind 500 activity"
-    },
-    "Complete_1_Daily_Mission": {
-      "name": "Complete 1 Daily Mission",
-      "help": "",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Clear_Calyx_Golden_1_times": {
-      "name": "Clear Calyx (Golden) 1 time(s)",
-      "help": "Need to configure and enable the \"Dungeon\" task",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Clear_Stagnant_Shadow_1_times": {
-      "name": "Clear Stagnant Shadow 1 time(s)",
-      "help": "Need to configure and enable the \"Dungeon\" task",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Clear_Cavern_of_Corrosion_1_times": {
-      "name": "Clear Cavern of Corrosion 1 time(s)",
-      "help": "Need to configure and enable the \"Dungeon\" task",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "In_a_single_battle_inflict_3_Weakness_Break_of_different_Types": {
-      "name": "In a single battle, inflict 3 Weakness Break of different Types",
-      "help": "Achievable by default, will do Himeko trial",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Inflict_Weakness_Break_5_times": {
-      "name": "Inflict Weakness Break 5 times",
-      "help": "Achievable by default, will do Himeko trial",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Defeat_a_total_of_20_enemies": {
-      "name": "Defeat a total of 20 enemies",
-      "help": "Achievable by default, will do Himeko trial",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Complete_Forgotten_Hall_1_time": {
-      "name": "Complete Forgotten Hall 1 time",
-      "help": "Achievable by default, will choose the first four characters to do stage 1 once, please ensure that account build is sufficient to do stage 1",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Complete_Echo_of_War_1_times": {
-      "name": "Complete Echo of War 1 time(s)",
-      "help": "Need to configure and enable the \"Echo of War\" task",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Use_an_Ultimate_to_deal_the_final_blow_1_time": {
-      "name": "Use an Ultimate to deal the final blow 1 time",
-      "help": "Achievable by default, will do Himeko trial",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Salvage_any_Relic": {
-      "name": "Salvage any Relic",
-      "help": "Achievable by default, will salvage the first one in reverse order of rarity",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Use_Consumables_1_time": {
-      "name": "Use Consumables 1 time",
-      "help": "Achievable by default, will use gear. If there is no material, synthesized before use",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Log_in_to_the_game": {
-      "name": "Log in to the game",
-      "help": "",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Dispatch_1_assignments": {
-      "name": "Dispatch 1 assignment(s)",
-      "help": "Need to configure and enable the \"Assignment\" task",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Complete_Simulated_Universe_1_times": {
-      "name": "Complete Simulated Universe 1 time(s)",
-      "help": "Need to configure and enable the \"Simulated Universe\" task",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Clear_Calyx_Crimson_1_times": {
-      "name": "Clear Calyx (Crimson) 1 time(s)",
-      "help": "AchievableQuest.Clear_Calyx_Crimson_1_times.help",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Enter_combat_by_attacking_enemie_Weakness_and_win_3_times": {
-      "name": "Enter combat by attacking enemies' Weakness and win 3 time(s)",
-      "help": "Achievable by default, will do Himeko trial",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Use_Technique_2_times": {
-      "name": "Use Technique 2 time(s)",
-      "help": "Achievable by default, will go to the abyssal 1 and use technique twice",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Destroy_3_destructible_objects": {
-      "name": "Destroy 3 destructible object(s)",
-      "help": "Achievable by default, will do Himeko trial",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Obtain_victory_in_combat_with_Support_Characters_1_times": {
-      "name": "Obtain victory in combat with Support Characters 1 time(s)",
-      "help": "Need to configure and enable the \"Dungeon\" task, configure support settings also",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Level_up_any_character_1_times": {
-      "name": "Level up any character 1 time(s)",
-      "help": "",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Level_up_any_Light_Cone_1_times": {
-      "name": "Level up any Light Cone 1 time(s)",
-      "help": "",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Use_the_Omni_Synthesizer_1_times": {
-      "name": "Use the Omni-Synthesizer 1 time(s)",
-      "help": "Achievable by default, will synthesize low-rarity material",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Take_photos_1_times": {
-      "name": "Take photos 1 time(s)",
-      "help": "Achievable by default",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Consume_120_Trailblaze_Power": {
-      "name": "Consume 120 Trailblaze Power",
-      "help": "",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    },
-    "Level_up_any_Relic_1_times": {
-      "name": "Level up any Relic 1 time(s)",
-      "help": "",
-      "achievable": "Achievable",
-      "not_set": "Not Set",
-      "not_supported": "Not Supported Yet"
-    }
-  },
   "DailyStorage": {
     "_info": {
-      "name": "DailyStorage._info.name",
-      "help": "DailyStorage._info.help"
+      "name": "Daily Quest",
+      "help": ""
     },
     "DailyActivity": {
       "name": "Activity",
@@ -942,8 +767,8 @@
   },
   "BattlePassStorage": {
     "_info": {
-      "name": "BattlePassStorage._info.name",
-      "help": "BattlePassStorage._info.help"
+      "name": "Honor",
+      "help": ""
     },
     "BattlePassLevel": {
       "name": "Honor",
@@ -971,6 +796,10 @@
     },
     "BattlePassQuestSynthesizeConsumables": {
       "name": "Synthesize Consumables 10 time(s)",
+      "help": ""
+    },
+    "BattlePassQuestStagnantShadow": {
+      "name": "Clear Stagnant Shadow 3 time(s)",
       "help": ""
     },
     "BattlePassQuestCavernOfCorrosion": {
@@ -1099,8 +928,8 @@
   },
   "ItemStorage": {
     "_info": {
-      "name": "ItemStorage._info.name",
-      "help": "ItemStorage._info.help"
+      "name": "Dashboard",
+      "help": ""
     },
     "Credit": {
       "name": "Credit",
@@ -1108,6 +937,24 @@
     },
     "StallerJade": {
       "name": "Jade",
+      "help": ""
+    }
+  },
+  "CloudStorage": {
+    "_info": {
+      "name": "Cloud HSR",
+      "help": ""
+    },
+    "CloudRemainSeasonPass": {
+      "name": "Season Pass Remain X day(s)",
+      "help": ""
+    },
+    "CloudRemainPaid": {
+      "name": "Paid Time Remain X minute(s)",
+      "help": ""
+    },
+    "CloudRemainFree": {
+      "name": "Free Time Remain X minute(s)",
       "help": ""
     }
   },
@@ -1153,11 +1000,11 @@
       "occurrence": "Prefer Occurrence"
     },
     "UseImmersifier": {
-      "name": "Claim Planers Using Immersifiers",
+      "name": "Claim Planars Using Immersifiers",
       "help": ""
     },
     "DoubleEvent": {
-      "name": "Participate in Double Planer Event",
+      "name": "Participate in Double Planar Event",
       "help": ""
     },
     "WeeklyFarming": {
@@ -1165,11 +1012,11 @@
       "help": ""
     },
     "UseStamina": {
-      "name": "Farm Planers Using Trailblase Power",
-      "help": "Task \"Dungeon\" will no longer run, and all trailblaze power will be used first to claim immersion rewards, except for double events."
+      "name": "Farm Planars Using Trailblaze Power",
+      "help": "Prioritize trailblaze power to farm planar ornaments, only taking priority over character planner"
     },
     "SimulatedUniverseFarm": {
-      "name": "Progress of elite boss farmed",
+      "name": "Elites/bosses Farmed",
       "help": ""
     }
   },
@@ -1226,6 +1073,38 @@
       "help": "No stop conditions, no error handling, stop when encountering an error. Please report errors according to the doc: https://github.com/LmeSzinc/StarRailCopilot/wiki/RogueMap_cn"
     }
   },
+  "Ornament": {
+    "_info": {
+      "name": "Ornament Extraction Settings",
+      "help": ""
+    },
+    "Dungeon": {
+      "name": "Dungeon Name",
+      "help": "",
+      "Divergent_Universe_Eternal_Comedy": "Running Wolves & Kalpagni Lantern (Eternal Comedy)",
+      "Divergent_Universe_To_Sweet_Dreams": "Sigonia & Izumo Gensei (To Sweet Dreams)",
+      "Divergent_Universe_Pouring_Blades": "Firmament & Penacony (Pouring Blades)",
+      "Divergent_Universe_Fruit_of_Evil": "Rutilant Arena & Broken Keel (Fruit of Evil)",
+      "Divergent_Universe_Permafrost": "Belobog & Salsotto (Permafrost)",
+      "Divergent_Universe_Gentle_Words": "Commercial Enterprise & Differentiator (Gentle Words)",
+      "Divergent_Universe_Smelted_Heart": "Banditry & Vonwacq (Smelted Heart)",
+      "Divergent_Universe_Untoppled_Walls": "Space Station & Ageless (Untoppled Walls)"
+    },
+    "UseImmersifier": {
+      "name": "Claim Planars Using Immersifiers",
+      "help": "",
+      "True": "Enabled"
+    },
+    "DoubleEvent": {
+      "name": "Participate in Double Planar Event",
+      "help": "",
+      "True": "Enabled"
+    },
+    "UseStamina": {
+      "name": "Farm Planars Using Trailblaze Power",
+      "help": "Prioritize trailblaze power to farm planar ornaments, taking priority over character planner and simulated universe"
+    }
+  },
   "Daemon": {
     "_info": {
       "name": "Dialogue Clicker",
@@ -1248,7 +1127,7 @@
   "PlannerScan": {
     "_info": {
       "name": "Scan Character Planner Results",
-      "help": "Tools need to stop the scheduler and then run independently\nBefore use, set planner goal in the in-game planner, calculate the results, and start scanning from the result page. Detailed usage see: https://github.com/LmeSzinc/StarRailCopilot/wiki/Planner_cn"
+      "help": "Tools need to stop the scheduler and then run independently\nBefore use, set planner goal in the in-game planner, calculate the results, and start scanning from the result page. Detailed usage see: https://github.com/LmeSzinc/StarRailCopilot/wiki/Planner_en"
     },
     "ResultAdd": {
       "name": "Accumulate multiple scan results",

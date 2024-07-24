@@ -16,8 +16,12 @@ class XPath:
     """
     登录界面元素
     """
-    # 帐号登录界面的进入游戏按钮，有这按钮说明帐号没登录
+    # 帐号登录界面的进入游戏按钮
     ACCOUNT_LOGIN = '//*[@text="进入游戏"]'
+    # 帐号登录界面，有这些按钮说明帐号没登录
+    ACCOUNT_PASSWORD_LOGIN = '//*[@text="账号密码"]'
+    ACCOUNT_REGISTER = '//*[@text="立即注册"]'
+    ACCOUNT_FORGET_PASSWORD = '//*[@text="忘记密码"]'
     # 登录后的弹窗，获得免费时长
     GET_REWARD = '//*[@text="点击空白区域关闭"]'
     # 用户协议和隐私政策更新提示
@@ -69,7 +73,7 @@ class XPath:
     悬浮窗及侧边栏元素
     """
     # 悬浮窗
-    FLOAT_WINDOW = '//*[@class="android.widget.ImageView"]'
+    FLOAT_WINDOW = '//*[@package="com.miHoYo.cloudgames.hkrpg" and @class="android.widget.ImageView"]'
     # 退出按钮，返回登录页面
     FLOAT_EXIT = '//*[@resource-id="com.miHoYo.cloudgames.hkrpg:id/iv_exit"]'
     # 弹出侧边栏的 节点信息
@@ -108,7 +112,11 @@ class LoginAndroidCloud(ModuleBase):
             if self.appear(XPath.START_GAME):
                 logger.info('Login to cloud main page')
                 break
-            if self.appear(XPath.ACCOUNT_LOGIN):
+            if (
+                    self.appear(XPath.ACCOUNT_REGISTER)
+                    or self.appear(XPath.ACCOUNT_PASSWORD_LOGIN)
+                    or self.appear(XPath.ACCOUNT_FORGET_PASSWORD)
+            ):
                 logger.critical('Account not login, you must have login once before running')
                 raise RequestHumanTakeover
             if update_checker.started() and update_checker.reached():
@@ -119,6 +127,8 @@ class LoginAndroidCloud(ModuleBase):
 
             # Click
             if self.appear_then_click(XPath.GET_REWARD):
+                continue
+            if self.appear_then_click(XPath.ACCOUNT_LOGIN):
                 continue
             if self.appear_then_click(XPath.POPUP_CONFIRM):
                 update_checker.start()
@@ -171,6 +181,15 @@ class LoginAndroidCloud(ModuleBase):
             self.config.stored.CloudRemainPaid.value = paid
             self.config.stored.CloudRemainFree.value = free
 
+    def _is_cloud_ingame(self):
+        button = self.xpath(XPath.FLOAT_WINDOW)
+        if self.appear(button):
+            # Confirm float window size
+            width, height = button.size
+            if (width < 120 and height < 120) and (width / height < 0.6 or height / width < 0.6):
+                return True
+        return False
+
     def _cloud_enter(self, skip_first=False):
         """
         Pages:
@@ -187,13 +206,9 @@ class LoginAndroidCloud(ModuleBase):
                 self.device.dump_hierarchy()
 
             # End
-            button = self.xpath(XPath.FLOAT_WINDOW)
-            if self.appear(button):
-                # Confirm float window size
-                width, height = button.size
-                if (width < 120 and height < 120) and (width / height < 0.6 or height / width < 0.6):
-                    logger.info('Cloud game entered')
-                    break
+            if self._is_cloud_ingame():
+                logger.info('Cloud game entered')
+                break
 
             # Queue daemon
             button = self.xpath(XPath.QUEUE_REMAIN)
@@ -334,13 +349,16 @@ class LoginAndroidCloud(ModuleBase):
         logger.attr('Net state', None)
         return False
 
-    def cloud_ensure_ingame(self):
+    def cloud_enter_game(self):
         """
+        Note that cloud game needs to be started before calling,
+            hierarchy needs to be updated before calling
+
         Pages:
-            in: Any
+            in: Any page in cloud game
             out: page_main
         """
-        logger.hr('Cloud ensure ingame', level=1)
+        logger.hr('Cloud enter game', level=1)
 
         with self.config.multi_set():
             if self.config.Emulator_GameClient != 'cloud_android':
@@ -350,72 +368,55 @@ class LoginAndroidCloud(ModuleBase):
             if self.config.Optimization_WhenTaskQueueEmpty != 'close_game':
                 self.config.Optimization_WhenTaskQueueEmpty = 'close_game'
 
-        for _ in range(3):
-            if self.device.app_is_running():
-                logger.info('Cloud game is already running')
-                self.device.dump_hierarchy()
-
-                if self.appear(XPath.START_GAME):
-                    logger.info('Cloud game is in main page')
-                    self._cloud_get_remain()
-                    self._cloud_enter()
-                    return True
-                elif self.appear(XPath.FLOAT_WINDOW):
-                    logger.info('Cloud game is in game')
-                    return True
-                elif self.appear(XPath.FLOAT_DELAY):
-                    logger.info('Cloud game is in game with float window expanded')
-                    self._cloud_setting_exit()
-                    return True
-                elif self.appear(XPath.POPUP_CONFIRM):
-                    logger.info('Cloud game have a popup')
-                    self._cloud_enter()
-                    return True
-                else:
-                    try:
-                        self._cloud_start()
-                    except GameNotRunningError:
-                        continue
-                    self._cloud_get_remain()
-                    self._cloud_enter()
-                    return True
-            else:
-                logger.info('Cloud game is not running')
-                self.device.app_start()
-                try:
-                    self._cloud_start()
-                except GameNotRunningError:
-                    continue
-                self._cloud_get_remain()
-                self._cloud_enter()
-                return True
-
-        logger.error('Failed to enter cloud game after 3 trials')
-        return False
+        if self.appear(XPath.START_GAME):
+            logger.info('Cloud game is in main page')
+            self._cloud_get_remain()
+            self._cloud_enter()
+            return True
+        elif self.is_in_cloud_page():
+            logger.info('Cloud game is in game')
+            return True
+        elif self.appear(XPath.FLOAT_DELAY):
+            logger.info('Cloud game is in game with float window expanded')
+            self._cloud_setting_exit()
+            return True
+        elif self.appear(XPath.POPUP_CONFIRM):
+            logger.info('Cloud game have a popup')
+            self._cloud_enter()
+            return True
+        else:
+            self._cloud_start()
+            self._cloud_get_remain()
+            self._cloud_enter()
+            return True
 
     def is_in_cloud_page(self):
         if self.appear(XPath.START_GAME):
             logger.info('Cloud game is in main page')
             return True
-        elif self.appear(XPath.FLOAT_DELAY):
+        if self.appear(XPath.FLOAT_DELAY):
             logger.info('Cloud game is in game with float window expanded')
             return True
-        elif self.appear(XPath.POPUP_CONFIRM):
+        if self.appear(XPath.POPUP_CONFIRM):
             logger.info('Cloud game have a popup')
+            return True
+        if self.appear(XPath.ACCOUNT_LOGIN):
+            logger.info('Cloud game is at account login')
             return True
 
         logger.info('Not in cloud page')
         return False
 
-    def cloud_login(self):
+    def cloud_try_enter_game(self):
         """
+        Note that hierarchy needs to be updated before calling
+
         Pages:
             in: Any page in cloud game
             out: page_main
         """
-        self.device.dump_hierarchy()
         if self.is_in_cloud_page():
-            self.cloud_ensure_ingame()
+            self.cloud_enter_game()
             return True
 
         return False
@@ -511,5 +512,7 @@ class LoginAndroidCloud(ModuleBase):
 
 if __name__ == '__main__':
     self = LoginAndroidCloud('src')
-    self.cloud_login()
+    self.device.app_start()
+    self.device.dump_hierarchy()
+    self.cloud_enter_game()
     self.cloud_keep_alive()

@@ -5,6 +5,7 @@ import numpy as np
 
 from module.base.base import ModuleBase
 from module.base.button import ClickButton
+from module.base.decorator import run_once
 from module.base.timer import Timer
 from module.base.utils import get_color
 from module.exception import ScriptError
@@ -17,6 +18,7 @@ from tasks.base.page import page_guide
 from tasks.combat.assets.assets_combat_interact import DUNGEON_COMBAT_INTERACT, DUNGEON_COMBAT_INTERACT_TEXT
 from tasks.combat.assets.assets_combat_prepare import COMBAT_PREPARE
 from tasks.dungeon.assets.assets_dungeon_ui import *
+from tasks.dungeon.assets.assets_dungeon_ui_rogue import *
 from tasks.dungeon.keywords import (
     DungeonList,
     DungeonNav,
@@ -33,12 +35,14 @@ from tasks.map.keywords import KEYWORDS_MAP_WORLD, MapPlane
 
 
 class DungeonTabSwitch(Switch):
+    SEARCH_BUTTON = TAB_SEARCH
+
     def add_state(self, state, check_button, click_button=None):
         # Load search
         if check_button is not None:
-            check_button.load_search(TAB_SEARCH.area)
+            check_button.load_search(self.__class__.SEARCH_BUTTON.area)
         if click_button is not None:
-            click_button.load_search(TAB_SEARCH.area)
+            click_button.load_search(self.__class__.SEARCH_BUTTON.area)
         return super().add_state(state, check_button, click_button)
 
     def click(self, state, main):
@@ -67,6 +71,11 @@ SWITCH_DUNGEON_TAB.add_state(
     KEYWORDS_DUNGEON_TAB.Survival_Index,
     check_button=SURVIVAL_INDEX_CHECK,
     click_button=SURVIVAL_INDEX_CLICK
+)
+SWITCH_DUNGEON_TAB.add_state(
+    KEYWORDS_DUNGEON_TAB.Simulated_Universe,
+    check_button=SIMULATED_UNIVERSE_CHECK,
+    click_button=SIMULATED_UNIVERSE_CLICK
 )
 SWITCH_DUNGEON_TAB.add_state(
     KEYWORDS_DUNGEON_TAB.Treasures_Lightward,
@@ -296,9 +305,19 @@ class DungeonUI(DungeonState):
             if timeout.reached():
                 logger.warning('Wait survival index loaded timeout')
                 return False
-            if self.appear(SURVIVAL_INDEX_LOADED):
-                logger.info('Survival index loaded')
+            if self.appear(SURVIVAL_INDEX_SU_LOADED):
+                logger.info('Survival index loaded, SURVIVAL_INDEX_SU_LOADED')
                 return True
+            if self.appear(SURVIVAL_INDEX_OE_LOADED):
+                logger.info('Survival index loaded, SURVIVAL_INDEX_OE_LOADED')
+                return True
+
+    def _dungeon_survival_index_top_appear(self):
+        if self.appear(SURVIVAL_INDEX_SU_LOADED):
+            return True
+        if self.appear(SURVIVAL_INDEX_OE_LOADED):
+            return True
+        return False
 
     def _dungeon_wait_treasures_lightward_loaded(self, skip_first_screenshot=True):
         """
@@ -327,6 +346,17 @@ class DungeonUI(DungeonState):
                 logger.info('Treasures lightward loaded (event locked)')
                 return True
 
+    def _dungeon_list_button_has_content(self):
+        # Check if having any content
+        # List background: 254, guild border: 225
+        r, g, b = cv2.split(self.image_crop(LIST_LOADED_CHECK, copy=False))
+        minimum = cv2.min(cv2.min(r, g), b)
+        minimum = inrange(minimum, lower=0, upper=180)
+        if minimum.size > 100:
+            return True
+        else:
+            return False
+
     def _dungeon_wait_until_dungeon_list_loaded(self, skip_first_screenshot=True):
         timeout = Timer(1, count=3).start()
         while 1:
@@ -340,14 +370,9 @@ class DungeonUI(DungeonState):
                 logger.warning('Wait until dungeon list loaded timeout')
                 return False
 
-            # Check if having any content
-            # List background: 254, guild border: 225
-            r, g, b = cv2.split(self.image_crop(LIST_LOADED_CHECK, copy=False))
-            minimum = cv2.min(cv2.min(r, g), b)
-            minimum = inrange(minimum, lower=0, upper=180)
-            if minimum.size > 100:
+            if self._dungeon_list_button_has_content():
                 logger.info('Dungeon list loaded')
-                break
+                return True
 
     def _dungeon_wait_until_echo_or_war_stabled(self, skip_first_screenshot=True):
         """
@@ -421,12 +446,14 @@ class DungeonUI(DungeonState):
                 break
 
         # Check if it's at the first page.
-        if button := DUNGEON_NAV_LIST.keyword2button(KEYWORDS_DUNGEON_NAV.Simulated_Universe, show_warning=False):
+        if DUNGEON_NAV_LIST.keyword2button(KEYWORDS_DUNGEON_NAV.Simulated_Universe, show_warning=False) \
+                or DUNGEON_NAV_LIST.keyword2button(KEYWORDS_DUNGEON_NAV.Ornament_Extraction, show_warning=False):
             # Going to use a faster method to navigate but can only start from list top
             logger.info('DUNGEON_NAV_LIST at top')
             # Update points if possible
-            if DUNGEON_NAV_LIST.is_row_selected(button, main=self):
-                self.dungeon_update_simuni()
+            # 2.3, No longer weekly points after Divergent Universe unlocked
+            # if DUNGEON_NAV_LIST.is_row_selected(button, main=self):
+            #     self.dungeon_update_simuni()
         # Treasures lightward is always at top
         elif DUNGEON_NAV_LIST.keyword2button(KEYWORDS_DUNGEON_NAV.Forgotten_Hall, show_warning=False) \
                 or DUNGEON_NAV_LIST.keyword2button(KEYWORDS_DUNGEON_NAV.Pure_Fiction, show_warning=False):
@@ -440,6 +467,8 @@ class DungeonUI(DungeonState):
         # Check the first page
         if nav in [
             KEYWORDS_DUNGEON_NAV.Simulated_Universe,
+            KEYWORDS_DUNGEON_NAV.Divergent_Universe,
+            KEYWORDS_DUNGEON_NAV.Ornament_Extraction,
             KEYWORDS_DUNGEON_NAV.Calyx_Golden,
             KEYWORDS_DUNGEON_NAV.Calyx_Crimson,
             KEYWORDS_DUNGEON_NAV.Stagnant_Shadow,
@@ -581,7 +610,12 @@ class DungeonUI(DungeonState):
         """
         logger.hr('Dungeon enter', level=2)
         DUNGEON_LIST.use_plane = bool(dungeon.is_Calyx_Crimson)
-        skip_first_load = True
+        skip_first_load = skip_first_screenshot
+
+        @run_once
+        def screenshot_interval_set():
+            self.device.screenshot_interval_set('combat')
+
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
@@ -591,11 +625,13 @@ class DungeonUI(DungeonState):
             # End
             if self.appear(enter_check_button):
                 logger.info(f'Arrive {enter_check_button.name}')
+                self.device.screenshot_interval_set()
                 break
 
             # Additional
             # Popup that confirm character switch
             if self.handle_popup_confirm():
+                self.interval_reset(page_guide.check_button)
                 continue
 
             # Click teleport
@@ -607,6 +643,7 @@ class DungeonUI(DungeonState):
                 entrance = DUNGEON_LIST.keyword2button(dungeon)
                 if entrance is not None:
                     self.device.click(entrance)
+                    screenshot_interval_set()
                     self.interval_reset(page_guide.check_button)
                     continue
                 else:
@@ -683,26 +720,6 @@ class DungeonUI(DungeonState):
         logger.attr('DungeonInteract', None)
         return None
 
-    def dungeon_goto_rogue(self):
-        """
-        Goto Simulated Universe page but not pressing the TELEPORT button
-
-        Pages:
-            in: Any
-            out: page_guide, Survival_Index, Simulated_Universe
-
-        Examples:
-            self = DungeonUI('src')
-            self.device.screenshot()
-            self.dungeon_goto_rogue()
-            self._rogue_teleport()
-        """
-        self.dungeon_tab_goto(KEYWORDS_DUNGEON_TAB.Survival_Index)
-        if self.appear(SURVIVAL_INDEX_LOADED):
-            logger.info('Already at nav Simulated_Universe')
-        else:
-            self._dungeon_nav_goto(KEYWORDS_DUNGEON_NAV.Simulated_Universe)
-
     def dungeon_goto(self, dungeon: DungeonList):
         """
         Returns:
@@ -726,7 +743,8 @@ class DungeonUI(DungeonState):
         if dungeon.is_Calyx_Crimson \
                 or dungeon.is_Stagnant_Shadow \
                 or dungeon.is_Cavern_of_Corrosion \
-                or dungeon.is_Echo_of_War:
+                or dungeon.is_Echo_of_War \
+                or dungeon.is_Ornament_Extraction:
             self._dungeon_nav_goto(dungeon.dungeon_nav)
             self._dungeon_wait_until_dungeon_list_loaded()
             self._dungeon_insight(dungeon)

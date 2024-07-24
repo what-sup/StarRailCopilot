@@ -3,6 +3,7 @@ import re
 import cv2
 from pponnxcr.predict_system import BoxedResult
 
+from module.base.decorator import cached_property
 from module.base.utils import area_center, area_in_area
 from module.exception import GamePageUnknownError
 from module.logger import logger
@@ -22,6 +23,7 @@ DETAIL_TITLE.load_search(RESULT_CHECK.search)
 
 class OcrItemName(Ocr):
     def after_process(self, result):
+        result = result.replace('方相果实', '万相果实')
         result = result.replace('念火之心', '忿火之心')
         result = re.sub('^火之心', '忿火之心', result)
         result = re.sub('工造机$', '工造机杼', result)
@@ -40,9 +42,8 @@ class OcrItemName(Ocr):
 class OcrPlannerResult(OcrWhiteLetterOnComplexBackground, OcrItemName):
     min_box = (16, 20)
 
-    def __init__(self):
-        # Planner currently CN only
-        super().__init__(OCR_RESULT, lang='cn')
+    def __init__(self, lang=None):
+        super().__init__(OCR_RESULT, lang=lang)
         self.limited_area = OCR_RESULT.area
         self.limit_y = 720
 
@@ -50,9 +51,10 @@ class OcrPlannerResult(OcrWhiteLetterOnComplexBackground, OcrItemName):
             self,
             result: str,
             keyword_classes,
-            lang: str = 'cn',
+            lang: str = None,
             ignore_punctuation=True,
             ignore_digit=True):
+        lang = self.lang
         return super()._match_result(
             result,
             keyword_classes,
@@ -93,12 +95,24 @@ class PlannerScan(SynthesizeUI, PlannerMixin):
             return True
         return False
 
+    @cached_property
+    def planner_lang(self) -> str:
+        if self.config.Emulator_PackageName in ['CN-Official', 'CN-Bilibili']:
+            lang = 'cn'
+        else:
+            lang = self.config.LANG
+        if lang == 'auto':
+            logger.error('Language was not set before planner scan, assume it is "cn"')
+            lang = 'cn'
+        logger.attr('PlannerLang', lang)
+        return lang
+
     def parse_planner_result_page(self) -> list[PlannerResultRow]:
         """
         Pages:
             in: planner result
         """
-        ocr = OcrPlannerResult()
+        ocr = OcrPlannerResult(lang=self.planner_lang)
         results = ocr.detect_and_ocr(self.device.image)
 
         x_total = 842

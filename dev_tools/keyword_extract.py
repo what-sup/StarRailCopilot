@@ -139,7 +139,8 @@ class KeywordExtract:
 
         old_quest = [
             "Go_on_assignment_1_time", # -> Dispatch_1_assignments
-            "Complete_1_stage_in_Simulated_Universe_Any_world", # -> Complete_Simulated_Universe_1_times
+            "Complete_Simulated_Universe_1_times", # same
+            "Complete_1_stage_in_Simulated_Universe_Any_world", # -> Complete_Divergent_Universe_or_Simulated_Universe_1_times
             "Complete_Calyx_Crimson_1_time", # -> Clear_Calyx_Crimson_1_times
             "Enter_combat_by_attacking_enemy_Weakness_and_win_3_times", # -> Enter_combat_by_attacking_enemie_Weakness_and_win_1_times
             "Use_Technique_2_times", # -> Use_Technique_1_times
@@ -155,7 +156,7 @@ class KeywordExtract:
 
         correct_times = {
         #    "Dispatch_1_assignments":  1,
-        #    "Complete_Simulated_Universe_1_times": 1,
+        #    "Complete_Divergent_Universe_or_Simulated_Universe_1_times": 1,
         #    "Clear_Calyx_Crimson_1_times": 1,
             "Enter_combat_by_attacking_enemie_Weakness_and_win_1_times": 3,
             "Use_Technique_1_times": 2,
@@ -384,8 +385,15 @@ class KeywordExtract:
             blessings_path_id = {blessing_hash: int(deep_get(blessings_info, f'{blessing_id}.1.RogueBuffType')) - 119
                                  # 119 is the magic number make type match with path in keyword above
                                  for blessing_hash, blessing_id in zip(blessings_hash, id_list)}
-            blessings_rarity = {blessing_hash: deep_get(blessings_info, f'{blessing_id}.1.RogueBuffRarity')
-                                for blessing_hash, blessing_id in zip(blessings_hash, id_list)}
+            blessings_category = {blessing_hash: deep_get(blessings_info, f'{blessing_id}.1.RogueBuffCategory')
+                                    for blessing_hash, blessing_id in zip(blessings_hash, id_list)}
+            category_map = {
+                "Common": 1,
+                "Rare": 2,
+                "Legendary": 3,
+            }
+            blessings_rarity = {blessing_hash: category_map[blessing_category]
+                                for blessing_hash, blessing_category in blessings_category.items()}
             enhancement = {blessing_hash: "" for blessing_hash in blessings_hash}
             if with_enhancement:
                 return blessings_hash, {'path_id': blessings_path_id, 'rarity': blessings_rarity,
@@ -421,10 +429,10 @@ class KeywordExtract:
             event_title_texts[text_to_variable(title_text)].append(title_id)
         option_file = os.path.join(
             TextMap.DATA_FOLDER, 'ExcelOutput',
-            'DialogueEventDisplay.json'
+            'RogueDialogueOptionDisplay.json'
         )
         option_ids = {
-            id_: deep_get(data, 'EventTitle.Hash')
+            id_: deep_get(data, 'OptionTitle.Hash')
             for id_, data in read_file(option_file).items()
         }
         # Key: event name hash, value: list of option id/hash
@@ -496,7 +504,6 @@ class KeywordExtract:
                     option_var = f'{option_var}_{option_md5[:md5_prefix_len]}'
                 return option_var
             return wrapper
-
         option_gen = None
         option_hash_to_keyword_id = dict()  # option hash -> option keyword id
         for i, (option_md5, option_hash) in enumerate(option_md5s.items(), start=1):
@@ -547,10 +554,11 @@ class KeywordExtract:
             yield hash_
 
     def generate(self):
-        self.load_keywords(['模拟宇宙', '拟造花萼（金）', '拟造花萼（赤）', '凝滞虚影', '侵蚀隧洞', '历战余响',
-                            '忘却之庭', '虚构叙事'])
+        self.load_keywords(['饰品提取', '差分宇宙', '模拟宇宙',
+                            '拟造花萼（金）', '拟造花萼（赤）', '凝滞虚影', '侵蚀隧洞', '历战余响',
+                            '最近更新', '忘却之庭', '虚构叙事', '末日幻影'])
         self.write_keywords(keyword_class='DungeonNav', output_file='./tasks/dungeon/keywords/nav.py')
-        self.load_keywords(['行动摘要', '生存索引', '每日实训', '逐光捡金', '战术训练'])
+        self.load_keywords(['行动摘要', '生存索引', '每日实训', '模拟宇宙', '逐光捡金', '战术训练'])
         self.write_keywords(keyword_class='DungeonTab', output_file='./tasks/dungeon/keywords/tab.py')
         self.load_keywords(['前往', '领取', '进行中', '已领取', '本日活跃度已满'])
         self.write_keywords(keyword_class='DailyQuestState', output_file='./tasks/daily/keywords/daily_quest_state.py')

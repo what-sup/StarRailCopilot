@@ -61,19 +61,19 @@ class DungeonEvent(UI):
         logger.attr('Double rogue', has)
         return has
 
-    def has_double_event_at_combat(self) -> bool:
+    def has_double_event_at_combat(self, button=OCR_DOUBLE_EVENT_REMAIN_AT_COMBAT) -> bool:
         """
         Pages:
             in: COMBAT_PREPARE
         """
         has = self.image_color_count(
-            OCR_DOUBLE_EVENT_REMAIN_AT_COMBAT,
+            button,
             color=(231, 188, 103),
             threshold=240, count=1000
         )
         # Anniversary 3x event
         has |= self.image_color_count(
-            OCR_DOUBLE_EVENT_REMAIN_AT_COMBAT,
+            button,
             color=(229, 62, 44),
             threshold=221, count=50
         )
@@ -86,7 +86,8 @@ class DungeonEvent(UI):
         # 3 is double relic
         # 12 is double calyx
         # 6 is double calyx on beginner account
-        if total not in [3, 6, 12]:
+        # 42 is double calyx on homecoming account
+        if total not in [3, 6, 12, 42]:
             logger.warning(f'Invalid double event remain')
             remain = 0
         return remain
@@ -109,21 +110,21 @@ class DungeonEvent(UI):
         logger.attr('Double event remain', remain)
         return remain
 
-    def get_double_event_remain_at_combat(self) -> int | None:
+    def get_double_event_remain_at_combat(self, button=OCR_DOUBLE_EVENT_REMAIN_AT_COMBAT) -> int | None:
         """
         Pages:
             in: COMBAT_PREPARE
         """
-        if not self.has_double_event_at_combat():
+        if not self.has_double_event_at_combat(button=button):
             logger.attr('Double event remain at combat', 0)
             return 0
 
-        ocr = DoubleEventOcr(OCR_DOUBLE_EVENT_REMAIN_AT_COMBAT)
+        ocr = DoubleEventOcr(button)
         for row in ocr.detect_and_ocr(self.device.image):
             if not ocr.is_format_matched(row.ocr_text):
                 continue
             remain, _, total = ocr.format_result(row.ocr_text)
-            if total in [3, 6, 12]:
+            if total in [3, 6, 12, 42]:
                 logger.attr('Double event remain at combat', remain)
                 return remain
         logger.warning('Double event appears but failed to get remain')
