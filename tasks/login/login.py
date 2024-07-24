@@ -45,6 +45,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         app_timer = Timer(30).start()
         login_success = False
         switched = False
+        inAccountMenu = False
         info = Ocr(button=GAME_INFO)
         
         while 1:
@@ -97,9 +98,10 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
             
             # Click logout comfirm button
-            if self.appear(LOGOUT_COMFIRM) and self.switch_account and not switched:
+            if self.appear(LOGOUT_COMFIRM) and self.switch_account and not switched and not inAccountMenu:
                 if self.appear_then_click(LOGOUT_COMFIRM):
                     logger.info(f'comfirm logout, start changing account')
+                    inAccountMenu = True
                     continue
                 else:
                     logger.info(f'Failed to click comfirm logout Button')
