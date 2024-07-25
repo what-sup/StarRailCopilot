@@ -6,6 +6,7 @@ from module.config.stored.classes import (
     StoredBattlePassQuestCavernOfCorrosion,
     StoredBattlePassQuestCredits,
     StoredBattlePassQuestEchoOfWar,
+    StoredBattlePassQuestStagnantShadow,
     StoredBattlePassQuestSynthesizeConsumables,
     StoredBattlePassQuestTrailblazePower,
     StoredBattlePassSimulatedUniverse,
@@ -31,9 +32,6 @@ from module.config.stored.classes import (
 # ``` python -m module/config/config_updater.py ```
 
 class StoredGenerated:
-    CloudRemainSeasonPass = StoredInt("Alas.CloudStorage.CloudRemainSeasonPass")
-    CloudRemainPaid = StoredInt("Alas.CloudStorage.CloudRemainPaid")
-    CloudRemainFree = StoredInt("Alas.CloudStorage.CloudRemainFree")
     PlannerOverall = StoredPlannerOverall("Dungeon.Planner.PlannerOverall")
     Item_Credit = StoredPlanner("Dungeon.Planner.Item_Credit")
     Item_Trailblaze_EXP = StoredPlanner("Dungeon.Planner.Item_Trailblaze_EXP")
@@ -100,9 +98,13 @@ class StoredGenerated:
     BattlePassQuestEchoOfWar = StoredBattlePassQuestEchoOfWar("BattlePass.BattlePassStorage.BattlePassQuestEchoOfWar")
     BattlePassQuestCredits = StoredBattlePassQuestCredits("BattlePass.BattlePassStorage.BattlePassQuestCredits")
     BattlePassQuestSynthesizeConsumables = StoredBattlePassQuestSynthesizeConsumables("BattlePass.BattlePassStorage.BattlePassQuestSynthesizeConsumables")
+    BattlePassQuestStagnantShadow = StoredBattlePassQuestStagnantShadow("BattlePass.BattlePassStorage.BattlePassQuestStagnantShadow")
     BattlePassQuestCavernOfCorrosion = StoredBattlePassQuestCavernOfCorrosion("BattlePass.BattlePassStorage.BattlePassQuestCavernOfCorrosion")
     BattlePassQuestTrailblazePower = StoredBattlePassQuestTrailblazePower("BattlePass.BattlePassStorage.BattlePassQuestTrailblazePower")
     Assignment = StoredAssignment("Assignment.Assignment.Assignment")
     Credit = StoredInt("DataUpdate.ItemStorage.Credit")
     StallerJade = StoredInt("DataUpdate.ItemStorage.StallerJade")
+    CloudRemainSeasonPass = StoredInt("DataUpdate.CloudStorage.CloudRemainSeasonPass")
+    CloudRemainPaid = StoredInt("DataUpdate.CloudStorage.CloudRemainPaid")
+    CloudRemainFree = StoredInt("DataUpdate.CloudStorage.CloudRemainFree")
     SimulatedUniverseFarm = StoredSimulatedUniverseElite("Rogue.RogueWorld.SimulatedUniverseFarm")

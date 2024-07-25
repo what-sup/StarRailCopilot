@@ -303,6 +303,7 @@ class InventoryManager:
             loca = item
 
         interval = Timer(2, count=6)
+        clicked = False
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
@@ -319,24 +320,27 @@ class InventoryManager:
                 continue
 
             # End
-            if item.is_selected:
+            if clicked and item.is_selected:
                 logger.info('Inventory item selected')
                 break
             # Click
             if interval.reached():
                 self.main.device.click(item)
                 interval.reset()
+                clicked = True
                 continue
 
-    def wait_selected(self, skip_first_screenshot=True):
+    def wait_selected(self, select_first=False, skip_first_screenshot=True):
         """
         Args:
+            select_first: True to click first item if no item was selected
             skip_first_screenshot:
 
         Returns:
             bool: If success
         """
         timeout = Timer(2, count=6).start()
+        interval = Timer(1, count=3)
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
@@ -344,6 +348,8 @@ class InventoryManager:
                 self.main.device.screenshot()
 
             self.update()
+
+            # End
             if timeout.reached():
                 logger.warning('Wait inventory selected timeout')
                 return False
@@ -351,3 +357,12 @@ class InventoryManager:
                 continue
             if self.selected is not None:
                 return True
+
+            # Click
+            if select_first:
+                first = self.get_first()
+                if first is None:
+                    logger.warning(f'No items detected, cannot select inventory')
+                elif interval.reached():
+                    self.main.device.click(first)
+                    interval.reset()

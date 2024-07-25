@@ -353,6 +353,8 @@ class RogueEntry(RouteBase, RogueRewardHandler, RoguePathHandler, DungeonRogueUI
                     f'RogueWorld_DoubleEvent={self.config.RogueWorld_DoubleEvent}, '
                     f'RogueWorld_WeeklyFarming={self.config.RogueWorld_WeeklyFarming}, '
                     f'RogueDebug_DebugMode={self.config.RogueDebug_DebugMode}')
+        ornament = self.config.is_task_enabled('Ornament')
+        logger.info(f'Ornament: {ornament}')
         # This shouldn't happen
         if self.config.RogueWorld_UseStamina and not self.config.RogueWorld_UseImmersifier:
             logger.error('Invalid rogue reward settings')
@@ -373,16 +375,19 @@ class RogueEntry(RouteBase, RogueRewardHandler, RoguePathHandler, DungeonRogueUI
             # Expired, do rogue
             pass
         elif self.config.stored.SimulatedUniverse.is_full():
-            if self.config.RogueWorld_UseImmersifier and self.config.stored.Immersifier.value > 0:
-                logger.info(
-                    'Reached weekly point limit but still have immersifiers left, continue to use them')
-            elif self.config.RogueWorld_WeeklyFarming and not self.config.stored.SimulatedUniverseFarm.is_full():
+            if self.config.RogueWorld_WeeklyFarming and not self.config.stored.SimulatedUniverseFarm.is_full():
                 logger.info(
                     'Reached weekly point limit but still continue to farm materials')
                 logger.attr(
                     "Farming Counter", self.config.stored.SimulatedUniverseFarm.to_counter())
                 if self.config.is_cloud_game and not self.config.stored.CloudRemainSeasonPass.value:
                     logger.warning('Running WeeklyFarming on cloud game without season pass may cause fee, skip')
+                    raise RogueReachedWeeklyPointLimit
+            elif self.config.RogueWorld_UseImmersifier and self.config.stored.Immersifier.value > 0:
+                logger.info(
+                    'Reached weekly point limit but still have immersifiers left, continue to use them')
+                if ornament:
+                    logger.info('Ornament enabled, skip farming rogue')
                     raise RogueReachedWeeklyPointLimit
             else:
                 raise RogueReachedWeeklyPointLimit

@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from module.base.decorator import set_cached_property
 from module.base.utils import area_offset
+from module.config.stored.classes import now
 from module.logger import logger
 from tasks.battle_pass.keywords import KEYWORDS_BATTLE_PASS_QUEST
 from tasks.combat.combat import Combat
@@ -16,6 +19,7 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
     achieved_daily_quest = False
     achieved_weekly_quest = False
     running_double = False
+    support_once = True
     daily_quests = []
     weekly_quests = []
 
@@ -77,6 +81,16 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                 wave_limit = relic
             if relic == 0:
                 return 0
+        # No need, already checked in Survival_Index
+        # if dungeon.is_Ornament_Extraction and self.running_double and \
+        #         self.config.stored.DungeonDouble.rogue > 0:
+        #     rogue = self.get_double_event_remain_at_combat()
+        #     if rogue is not None and rogue < self.config.stored.DungeonDouble.rogue:
+        #         self.config.stored.DungeonDouble.rogue = rogue
+        #         wave_limit = rogue
+        #     if rogue == 0:
+        #         return 0
+
         # Combat
         self.dungeon = dungeon
         count = self.combat(team=team, wave_limit=wave_limit, support_character=support_character)
@@ -111,6 +125,12 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                 if KEYWORDS_DAILY_QUEST.Clear_Stagnant_Shadow_1_times in self.daily_quests:
                     logger.info('Achieve daily quest Clear_Stagnant_Shadow_1_times')
                     self.achieved_daily_quest = True
+                if KEYWORDS_BATTLE_PASS_QUEST.Clear_Stagnant_Shadow_1_times in self.weekly_quests:
+                    logger.info('Done weekly quest Clear_Stagnant_Shadow_1_times once')
+                    self.config.stored.BattlePassQuestStagnantShadow.add()
+                    if self.config.stored.BattlePassQuestStagnantShadow.is_full():
+                        logger.info('Achieved weekly quest Clear_Stagnant_Shadow_1_times')
+                        self.achieved_weekly_quest = True
             # Cavern_of_Corrosion
             if dungeon.is_Cavern_of_Corrosion:
                 if KEYWORDS_DAILY_QUEST.Clear_Cavern_of_Corrosion_1_times in self.daily_quests:
@@ -133,6 +153,12 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                     if self.config.stored.BattlePassQuestEchoOfWar.is_full():
                         logger.info('Achieved weekly quest Complete_Echo_of_War_1_times')
                         self.achieved_weekly_quest = True
+            # Ornament_Extraction
+            if dungeon.is_Ornament_Extraction:
+                if KEYWORDS_BATTLE_PASS_QUEST.Complete_Divergent_Universe_or_Simulated_Universe_1_times in self.weekly_quests:
+                    logger.info('Achieved weekly quest Complete_Divergent_Universe_or_Simulated_Universe_1_times')
+                    # No need to add since it's 0/1
+                    self.achieved_weekly_quest = True
             '''
             # Support quest
             if support_character is not None:
@@ -172,7 +198,7 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
             out: page_main
         """
         require = self.require_compulsory_support()
-        if require:
+        if require and self.support_once:
             logger.info('Run once with support')
             count = self._dungeon_run(dungeon=dungeon, team=team, wave_limit=1,
                                       support_character=self.config.DungeonSupport_Character)
@@ -187,34 +213,36 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
 
             return count
 
+        elif require and not self.support_once:
+            # Run with support all the way
+            return self._dungeon_run(dungeon=dungeon, team=team, wave_limit=0,
+                              support_character=self.config.DungeonSupport_Character)
+
         else:
             # Normal run
             return self._dungeon_run(dungeon=dungeon, team=team, wave_limit=wave_limit,
                                      support_character=support_character)
 
-    def run(self):
-        if Login(config=self.config, device=self.device).accountSwtich:
-            Login(config=self.config, device=self.device).ensureAccount()
-
-        self.config.update_battle_pass_quests()
-        self.config.update_daily_quests()
-        self.check_synthesize()
-        self.called_daily_support = False
-        self.achieved_daily_quest = False
-        self.achieved_weekly_quest = False
-        self.running_double = False
-        self.daily_quests = self.config.stored.DailyQuest.load_quests()
-        self.weekly_quests = self.config.stored.BattlePassWeeklyQuest.load_quests()
-
+    def update_double_event_record(self):
+        """
+        Pages:
+            in: Any
+            out: page_guide, Survival_Index
+        """
         # Update double event records
         if (self.config.stored.DungeonDouble.is_expired()
                 or self.config.stored.DungeonDouble.calyx > 0
                 or self.config.stored.DungeonDouble.relic > 0
                 or self.config.stored.DungeonDouble.rogue > 0):
+            update = self.config.stored.DungeonDouble.time
+            if update <= now() <= update + timedelta(seconds=5):
+                logger.info('Dungeon double just updated, skip')
+                return
             logger.info('Get dungeon double remains')
             # UI switches
             switched = self.dungeon_tab_goto(KEYWORDS_DUNGEON_TAB.Survival_Index)
-            if not switched:
+            if not switched and not self._dungeon_survival_index_top_appear():
+                logger.info('Reset nav states')
                 # Nav must at top, reset nav states
                 self.ui_goto_main()
                 self.dungeon_tab_goto(KEYWORDS_DUNGEON_TAB.Survival_Index)
@@ -234,6 +262,21 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
                 self.config.stored.DungeonDouble.calyx = calyx
                 self.config.stored.DungeonDouble.relic = relic
                 self.config.stored.DungeonDouble.rogue = rogue
+
+    def run(self):
+        if Login(config=self.config, device=self.device).accountSwtich:
+            Login(config=self.config, device=self.device).ensureAccount()
+        self.sync_config_traiblaze_power('Ornament')
+        self.config.update_battle_pass_quests()
+        self.config.update_daily_quests()
+        self.check_synthesize()
+        self.called_daily_support = False
+        self.achieved_daily_quest = False
+        self.achieved_weekly_quest = False
+        self.running_double = False
+        self.daily_quests = self.config.stored.DailyQuest.load_quests()
+        self.weekly_quests = self.config.stored.BattlePassWeeklyQuest.load_quests()
+        self.update_double_event_record()
 
         # Run double events
         planner = self.planner.get_dungeon(double_calyx=True)
@@ -257,7 +300,7 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
 
         # Dungeon to clear all trailblaze power
         do_rogue = False
-        if self.config.is_task_enabled('Rogue'):
+        if self.config.is_task_enabled('Rogue') and not self.config.is_task_enabled('Ornament'):
             if self.config.cross_get('Rogue.RogueWorld.UseStamina'):
                 logger.info('Going to use stamina in rogue')
                 do_rogue = True
@@ -271,14 +314,6 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
         if planner is not None:
             final = planner
             self.is_doing_planner = True
-
-        # Check daily
-        if self.achieved_daily_quest:
-            self.config.task_call('DailyQuest')
-            self.config.task_stop()
-        if self.achieved_weekly_quest:
-            self.config.task_call('BattlePass')
-            self.config.task_stop()
 
         # Use all stamina
         if do_rogue:
@@ -413,3 +448,19 @@ class Dungeon(DungeonStamina, DungeonEvent, Combat):
         if KEYWORDS_DAILY_QUEST.Consume_120_Trailblaze_Power in self.daily_quests:
             logger.info(f'Done Consume_120_Trailblaze_Power stamina {stamina_used}')
             self.achieved_daily_quest = True
+
+    def sync_config_traiblaze_power(self, set_task):
+        # Sync Dungeon.TrailblazePower and Ornament.TrailblazePower
+        with self.config.multi_set():
+            value = self.config.TrailblazePower_ExtractReservedTrailblazePower
+            keys = f'{set_task}.TrailblazePower.ExtractReservedTrailblazePower'
+            if self.config.cross_get(keys) != value:
+                self.config.cross_set(keys, value)
+            value = self.config.TrailblazePower_UseFuel
+            keys = f'{set_task}.TrailblazePower.UseFuel'
+            if self.config.cross_get(keys) != value:
+                self.config.cross_set(keys, value)
+            value = self.config.TrailblazePower_FuelReserve
+            keys = f'{set_task}.TrailblazePower.FuelReserve'
+            if self.config.cross_get(keys) != value:
+                self.config.cross_set(keys, value)

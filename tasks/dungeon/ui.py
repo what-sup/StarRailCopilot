@@ -5,6 +5,7 @@ import numpy as np
 
 from module.base.base import ModuleBase
 from module.base.button import ClickButton
+from module.base.decorator import run_once
 from module.base.timer import Timer
 from module.base.utils import get_color
 from module.exception import ScriptError
@@ -311,6 +312,13 @@ class DungeonUI(DungeonState):
                 logger.info('Survival index loaded, SURVIVAL_INDEX_OE_LOADED')
                 return True
 
+    def _dungeon_survival_index_top_appear(self):
+        if self.appear(SURVIVAL_INDEX_SU_LOADED):
+            return True
+        if self.appear(SURVIVAL_INDEX_OE_LOADED):
+            return True
+        return False
+
     def _dungeon_wait_treasures_lightward_loaded(self, skip_first_screenshot=True):
         """
         Returns:
@@ -602,7 +610,12 @@ class DungeonUI(DungeonState):
         """
         logger.hr('Dungeon enter', level=2)
         DUNGEON_LIST.use_plane = bool(dungeon.is_Calyx_Crimson)
-        skip_first_load = True
+        skip_first_load = skip_first_screenshot
+
+        @run_once
+        def screenshot_interval_set():
+            self.device.screenshot_interval_set('combat')
+
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
@@ -612,11 +625,13 @@ class DungeonUI(DungeonState):
             # End
             if self.appear(enter_check_button):
                 logger.info(f'Arrive {enter_check_button.name}')
+                self.device.screenshot_interval_set()
                 break
 
             # Additional
             # Popup that confirm character switch
             if self.handle_popup_confirm():
+                self.interval_reset(page_guide.check_button)
                 continue
 
             # Click teleport
@@ -628,6 +643,7 @@ class DungeonUI(DungeonState):
                 entrance = DUNGEON_LIST.keyword2button(dungeon)
                 if entrance is not None:
                     self.device.click(entrance)
+                    screenshot_interval_set()
                     self.interval_reset(page_guide.check_button)
                     continue
                 else:
@@ -727,7 +743,8 @@ class DungeonUI(DungeonState):
         if dungeon.is_Calyx_Crimson \
                 or dungeon.is_Stagnant_Shadow \
                 or dungeon.is_Cavern_of_Corrosion \
-                or dungeon.is_Echo_of_War:
+                or dungeon.is_Echo_of_War \
+                or dungeon.is_Ornament_Extraction:
             self._dungeon_nav_goto(dungeon.dungeon_nav)
             self._dungeon_wait_until_dungeon_list_loaded()
             self._dungeon_insight(dungeon)

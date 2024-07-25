@@ -73,6 +73,38 @@ u2.setup_logger = setup_logger
 u2.init.setup_logger = setup_logger
 
 
+# Patch Initer
+class PatchedIniter(u2.init.Initer):
+    @property
+    def atx_agent_url(self):
+        files = {
+            'armeabi-v7a': 'atx-agent_{v}_linux_armv7.tar.gz',
+            # 'arm64-v8a': 'atx-agent_{v}_linux_armv7.tar.gz',
+            'arm64-v8a': 'atx-agent_{v}_linux_arm64.tar.gz',
+            'armeabi': 'atx-agent_{v}_linux_armv6.tar.gz',
+            'x86': 'atx-agent_{v}_linux_386.tar.gz',
+            'x86_64': 'atx-agent_{v}_linux_386.tar.gz',
+        }
+        name = None
+        for abi in self.abis:
+            name = files.get(abi)
+            if name:
+                break
+        if not name:
+            raise Exception(
+                "arch(%s) need to be supported yet, please report an issue in github"
+                % self.abis)
+        return u2.init.GITHUB_BASEURL + '/atx-agent/releases/download/%s/%s' % (
+            u2.version.__atx_agent_version__, name.format(v=u2.version.__atx_agent_version__))
+
+    @property
+    def minicap_urls(self):
+        return []
+
+
+u2.init.Initer = PatchedIniter
+
+
 def is_port_using(port_num):
     """ if port is using by others, return True. else return False """
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -206,12 +238,6 @@ def handle_adb_error(e):
         # Raised by uiautomator2 when current adb service is killed by another version of adb service.
         logger.error(e)
         return True
-    elif 'unknown host service' in text:
-        # AdbError(unknown host service)
-        # Another version of ADB service started, current ADB service has been killed.
-        # Usually because user opened a Chinese emulator, which uses ADB from the Stone Age.
-        logger.error(e)
-        return True
     else:
         # AdbError()
         logger.exception(e)
@@ -220,6 +246,25 @@ def handle_adb_error(e):
             'Emulator died, please restart emulator',
             'Serial incorrect, no such device exists or emulator is not running'
         )
+        return False
+
+
+def handle_unknown_host_service(e):
+    """
+    Args:
+        e (Exception):
+
+    Returns:
+        bool: If should retry
+    """
+    text = str(e)
+    if 'unknown host service' in text:
+        # AdbError(unknown host service)
+        # Another version of ADB service started, current ADB service has been killed.
+        # Usually because user opened a Chinese emulator, which uses ADB from the Stone Age.
+        logger.error(e)
+        return True
+    else:
         return False
 
 
@@ -394,6 +439,7 @@ class HierarchyButton:
     """
     Element props
     """
+
     def _get_bool_prop(self, prop: str) -> bool:
         return self.attrib.get(prop, "").lower() == 'true'
 

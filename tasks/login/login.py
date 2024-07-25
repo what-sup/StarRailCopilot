@@ -45,6 +45,7 @@ class Login(switchAccount, UI, LoginAndroidCloud):
         app_timer = Timer(30).start()
         login_success = False
         switched = False
+        inAccountMenu = False
         info = Ocr(button=GAME_INFO)
         
         while 1:
@@ -97,9 +98,10 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                     continue
             
             # Click logout comfirm button
-            if self.appear(LOGOUT_COMFIRM) and self.switch_account and not switched:
+            if self.appear(LOGOUT_COMFIRM) and self.switch_account and not switched and not inAccountMenu:
                 if self.appear_then_click(LOGOUT_COMFIRM):
                     logger.info(f'comfirm logout, start changing account')
+                    inAccountMenu = True
                     continue
                 else:
                     logger.info(f'Failed to click comfirm logout Button')
@@ -182,18 +184,23 @@ class Login(switchAccount, UI, LoginAndroidCloud):
 
     def app_start(self):
         logger.hr('App start')
+        self.device.app_start()
+
         if self.config.is_cloud_game:
-            self.cloud_ensure_ingame()
+            self.device.dump_hierarchy()
+            self.cloud_enter_game()
         else:
-            self.device.app_start()
             self.handle_app_login()
 
     def app_restart(self):
         logger.hr('App restart')
         self.device.app_stop()
+        self.device.app_start()
+
         if self.config.is_cloud_game:
-            self.cloud_ensure_ingame()
+            self.device.dump_hierarchy()
+            self.cloud_enter_game()
         else:
-            self.device.app_start()
             self.handle_app_login()
+
         self.config.task_delay(server_update=True)
