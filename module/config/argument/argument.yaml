@@ -138,6 +138,8 @@ DungeonStorage:
     stored: StoredTrailblazePower
     order: 1
     color: "#eb8efe"
+  Reserved:
+    stored: StoredResersed
   Immersifier:
     stored: StoredImmersifier
   DungeonDouble:
