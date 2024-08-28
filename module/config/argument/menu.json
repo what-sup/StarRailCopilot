@@ -13,6 +13,7 @@
     "page": "setting",
     "tasks": [
       "Dungeon",
+      "Ornament",
       "DailyQuest",
       "BattlePass",
       "Assignment",
@@ -25,8 +26,7 @@
     "page": "setting",
     "tasks": [
       "Weekly",
-      "Rogue",
-      "Ornament"
+      "Rogue"
     ]
   },
   "Tool": {

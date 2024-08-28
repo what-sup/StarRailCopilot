@@ -34,6 +34,10 @@
       "name": "Dungeon",
       "help": ""
     },
+    "Ornament": {
+      "name": "Ornament",
+      "help": "The followings must be satisfied:\n1. Manually clear Divergent Universe once this week and have a save file.\n2. Enter the dungeon once on current device to have dungeon team saved."
+    },
     "DailyQuest": {
       "name": "Daily Quest",
       "help": ""
@@ -61,10 +65,6 @@
     "Rogue": {
       "name": "Simulated Universe",
       "help": ""
-    },
-    "Ornament": {
-      "name": "Ornament",
-      "help": "The followings must be satisfied:\n1. Manually clear Divergent Universe once this week and have a save file.\n2. Enter the dungeon once on current device to have dungeon team saved."
     },
     "Daemon": {
       "name": "Dialogue Clicker",
@@ -444,6 +444,7 @@
       "Hook": "Hook",
       "Huohuo": "Huohuo",
       "Jade": "Jade",
+      "Jiaoqiu": "Jiaoqiu",
       "JingYuan": "Jing Yuan",
       "Jingliu": "Jingliu",
       "Kafka": "Kafka",
@@ -977,7 +978,6 @@
       "Simulated_Universe_World_4": "Simulated Universe: World 4",
       "Simulated_Universe_World_5": "Simulated Universe: World 5",
       "Simulated_Universe_World_6": "Simulated Universe: World 6",
-      "Simulated_Universe_World_7": "Simulated Universe: World 7",
       "Simulated_Universe_World_8": "Simulated Universe: World 8"
     },
     "Path": {

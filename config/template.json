@@ -130,6 +130,29 @@
       "FuelReserve": 5
     }
   },
+  "Ornament": {
+    "Scheduler": {
+      "Enable": false,
+      "NextRun": "2020-01-01 00:00:00",
+      "Command": "Ornament",
+      "ServerUpdate": "04:00"
+    },
+    "Ornament": {
+      "Dungeon": "Divergent_Universe_Eternal_Comedy",
+      "UseImmersifier": true,
+      "DoubleEvent": true,
+      "UseStamina": false
+    },
+    "DungeonSupport": {
+      "Use": "when_daily",
+      "Character": "FirstCharacter"
+    },
+    "TrailblazePower": {
+      "ExtractReservedTrailblazePower": false,
+      "UseFuel": false,
+      "FuelReserve": 5
+    }
+  },
   "DailyQuest": {
     "Scheduler": {
       "Enable": true,
@@ -231,7 +254,7 @@
       "ServerUpdate": "04:00"
     },
     "RogueWorld": {
-      "World": "Simulated_Universe_World_7",
+      "World": "Simulated_Universe_World_8",
       "Path": "The_Hunt",
       "Bonus": "Blessing Universe",
       "DomainStrategy": "combat",
@@ -252,29 +275,6 @@
     },
     "RogueDebug": {
       "DebugMode": false
-    }
-  },
-  "Ornament": {
-    "Scheduler": {
-      "Enable": false,
-      "NextRun": "2020-01-01 00:00:00",
-      "Command": "Ornament",
-      "ServerUpdate": "04:00"
-    },
-    "Ornament": {
-      "Dungeon": "Divergent_Universe_Eternal_Comedy",
-      "UseImmersifier": true,
-      "DoubleEvent": true,
-      "UseStamina": false
-    },
-    "DungeonSupport": {
-      "Use": "when_daily",
-      "Character": "FirstCharacter"
-    },
-    "TrailblazePower": {
-      "ExtractReservedTrailblazePower": false,
-      "UseFuel": false,
-      "FuelReserve": 5
     }
   },
   "Daemon": {

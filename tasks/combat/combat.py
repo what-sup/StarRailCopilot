@@ -31,8 +31,14 @@ class Combat(CombatInteract, CombatPrepare, CombatState, CombatTeam, CombatSuppo
             in: COMBAT_PREPARE
         """
         self.combat_waves = 1
-        current = self.combat_get_trailblaze_power()
         cost = self.combat_get_wave_cost()
+        current = self.combat_get_trailblaze_power()
+        if current < self.combat_wave_cost:
+            if self._try_get_more_trablaize_power(self.combat_wave_cost):
+                current = self.config.stored.TrailblazePower.value
+            else:
+                return False
+
         if cost == 10:
             # Calyx
             self.combat_waves = min(current // self.combat_wave_cost, 6)
