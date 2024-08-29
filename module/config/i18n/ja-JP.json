@@ -34,6 +34,10 @@
       "name": "Task.Dungeon.name",
       "help": "Task.Dungeon.help"
     },
+    "Ornament": {
+      "name": "Task.Ornament.name",
+      "help": "Task.Ornament.help"
+    },
     "DailyQuest": {
       "name": "Task.DailyQuest.name",
       "help": "Task.DailyQuest.help"
@@ -61,10 +65,6 @@
     "Rogue": {
       "name": "Task.Rogue.name",
       "help": "Task.Rogue.help"
-    },
-    "Ornament": {
-      "name": "Task.Ornament.name",
-      "help": "Task.Ornament.help"
     },
     "Daemon": {
       "name": "Task.Daemon.name",
@@ -462,6 +462,7 @@
       "Hook": "フック",
       "Huohuo": "フォフォ",
       "Jade": "ジェイド",
+      "Jiaoqiu": "椒丘",
       "JingYuan": "景元",
       "Jingliu": "鏡流",
       "Kafka": "カフカ",
@@ -502,6 +503,10 @@
     "TrailblazePower": {
       "name": "DungeonStorage.TrailblazePower.name",
       "help": "DungeonStorage.TrailblazePower.help"
+    },
+    "Reserved": {
+      "name": "DungeonStorage.Reserved.name",
+      "help": "DungeonStorage.Reserved.help"
     },
     "Immersifier": {
       "name": "DungeonStorage.Immersifier.name",
@@ -991,7 +996,6 @@
       "Simulated_Universe_World_4": "第四世界・模擬宇宙",
       "Simulated_Universe_World_5": "第五世界・模擬宇宙",
       "Simulated_Universe_World_6": "第六世界・模擬宇宙",
-      "Simulated_Universe_World_7": "第七世界・模擬宇宙",
       "Simulated_Universe_World_8": "第八世界・模擬宇宙"
     },
     "Path": {

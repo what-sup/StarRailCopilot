@@ -62,10 +62,11 @@ class GeneratedConfig:
 
     # Group `DungeonSupport`
     DungeonSupport_Use = 'when_daily'  # always_use, when_daily, do_not_use
-    DungeonSupport_Character = 'FirstCharacter'  # FirstCharacter, Acheron, Argenti, Arlan, Asta, Aventurine, Bailu, BlackSwan, Blade, Boothill, Bronya, Clara, DanHeng, DanHengImbibitorLunae, DrRatio, Firefly, FuXuan, Gallagher, Gepard, Guinaifen, Hanya, Herta, Himeko, Hook, Huohuo, Jade, JingYuan, Jingliu, Kafka, Luka, Luocha, Lynx, March7thPreservation, March7thTheHunt, Misha, Natasha, Pela, Qingque, Robin, RuanMei, Sampo, Seele, Serval, SilverWolf, Sparkle, Sushang, Tingyun, TopazNumby, TrailblazerDestruction, TrailblazerHarmony, TrailblazerPreservation, Welt, Xueyi, Yanqing, Yukong, Yunli
+    DungeonSupport_Character = 'FirstCharacter'  # FirstCharacter, Acheron, Argenti, Arlan, Asta, Aventurine, Bailu, BlackSwan, Blade, Boothill, Bronya, Clara, DanHeng, DanHengImbibitorLunae, DrRatio, Firefly, FuXuan, Gallagher, Gepard, Guinaifen, Hanya, Herta, Himeko, Hook, Huohuo, Jade, Jiaoqiu, JingYuan, Jingliu, Kafka, Luka, Luocha, Lynx, March7thPreservation, March7thTheHunt, Misha, Natasha, Pela, Qingque, Robin, RuanMei, Sampo, Seele, Serval, SilverWolf, Sparkle, Sushang, Tingyun, TopazNumby, TrailblazerDestruction, TrailblazerHarmony, TrailblazerPreservation, Welt, Xueyi, Yanqing, Yukong, Yunli
 
     # Group `DungeonStorage`
     DungeonStorage_TrailblazePower = {}
+    DungeonStorage_Reserved = {}
     DungeonStorage_Immersifier = {}
     DungeonStorage_DungeonDouble = {}
     DungeonStorage_EchoOfWar = {}
@@ -167,7 +168,7 @@ class GeneratedConfig:
     CloudStorage_CloudRemainFree = {}
 
     # Group `RogueWorld`
-    RogueWorld_World = 'Simulated_Universe_World_7'  # Simulated_Universe_World_3, Simulated_Universe_World_4, Simulated_Universe_World_5, Simulated_Universe_World_6, Simulated_Universe_World_7, Simulated_Universe_World_8
+    RogueWorld_World = 'Simulated_Universe_World_8'  # Simulated_Universe_World_3, Simulated_Universe_World_4, Simulated_Universe_World_5, Simulated_Universe_World_6, Simulated_Universe_World_8
     RogueWorld_Path = 'The_Hunt'  # Preservation, Remembrance, Nihility, Abundance, The_Hunt, Destruction, Elation, Propagation, Erudition
     RogueWorld_Bonus = 'Blessing Universe'  # Blessing Universe, Miracle Universe, Fragmented Universe
     RogueWorld_DomainStrategy = 'combat'  # combat, occurrence

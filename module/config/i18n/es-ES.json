@@ -34,6 +34,10 @@
       "name": "Mazmorra",
       "help": ""
     },
+    "Ornament": {
+      "name": "Ornamentos",
+      "help": "Se deben cumplir los siguientes requisitos:\n1. Borre manualmente Universo Diferenciado una vez esta semana y tenga un archivo guardado.\n2. Ingrese a la mazmorra una vez en el dispositivo actual para guardar el equipo de la mazmorra."
+    },
     "DailyQuest": {
       "name": "Misión diaria",
       "help": ""
@@ -61,10 +65,6 @@
     "Rogue": {
       "name": "Universo Simulado",
       "help": ""
-    },
-    "Ornament": {
-      "name": "Ornamentos",
-      "help": "Se deben cumplir los siguientes requisitos:\n1. Borre manualmente Universo Diferenciado una vez esta semana y tenga un archivo guardado.\n2. Ingrese a la mazmorra una vez en el dispositivo actual para guardar el equipo de la mazmorra."
     },
     "Daemon": {
       "name": "Clic de diálogo",
@@ -462,6 +462,7 @@
       "Hook": "Hook",
       "Huohuo": "Huohuo",
       "Jade": "Jade",
+      "Jiaoqiu": "Jiaoqiu",
       "JingYuan": "Jing Yuan",
       "Jingliu": "Jingliu",
       "Kafka": "Kafka",
@@ -501,6 +502,10 @@
     },
     "TrailblazePower": {
       "name": "Poder",
+      "help": ""
+    },
+    "Reserved": {
+      "name": "Trailblaze Poder Reservada",
       "help": ""
     },
     "Immersifier": {
@@ -991,7 +996,6 @@
       "Simulated_Universe_World_4": "Mundo 4",
       "Simulated_Universe_World_5": "Mundo 5",
       "Simulated_Universe_World_6": "Mundo 6",
-      "Simulated_Universe_World_7": "Mundo 7",
       "Simulated_Universe_World_8": "Mundo 8"
     },
     "Path": {
