@@ -3,45 +3,16 @@ from module.base.button import Button, ButtonWrapper
 # This file was auto-generated, do not modify it manually. To generate:
 # ``` python -m dev_tools.button_extract ```
 
-ACCOUNT_LIST = ButtonWrapper(
-    name='ACCOUNT_LIST',
-    share=Button(
-        file='./assets/share/login/ACCOUNT_LIST.png',
-        area=(484, 357, 837, 600),
-        search=(464, 337, 857, 620),
-        color=(255, 255, 255),
-        button=(484, 357, 837, 600),
+ACCOUNT_CONFIRM = ButtonWrapper(
+    name='ACCOUNT_CONFIRM',
+    cn=Button(
+        file='./assets/cn/login/ACCOUNT_CONFIRM.png',
+        area=(583, 424, 696, 450),
+        search=(563, 404, 716, 470),
+        color=(172, 145, 92),
+        button=(583, 424, 696, 450),
     ),
-)
-CURRENT_ACCOUNT = ButtonWrapper(
-    name='CURRENT_ACCOUNT',
-    share=Button(
-        file='./assets/share/login/CURRENT_ACCOUNT.png',
-        area=(508, 274, 842, 316),
-        search=(488, 254, 862, 336),
-        color=(255, 255, 255),
-        button=(508, 274, 842, 316),
-    ),
-)
-GAME_INFO = ButtonWrapper(
-    name='GAME_INFO',
-    share=Button(
-        file='./assets/share/login/GAME_INFO.png',
-        area=(5, 690, 397, 706),
-        search=(0, 670, 417, 720),
-        color=(230, 230, 230),
-        button=(5, 690, 397, 706),
-    ),
-)
-LOGIN_CHOOSE_ACCOUNT = ButtonWrapper(
-    name='LOGIN_CHOOSE_ACCOUNT',
-    share=Button(
-        file='./assets/share/login/LOGIN_CHOOSE_ACCOUNT.png',
-        area=(845, 273, 886, 312),
-        search=(825, 253, 906, 332),
-        color=(250, 250, 250),
-        button=(845, 273, 886, 312),
-    ),
+    en=None,
 )
 LOGIN_CONFIRM = ButtonWrapper(
     name='LOGIN_CONFIRM',

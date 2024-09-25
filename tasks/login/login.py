@@ -5,7 +5,7 @@ from module.config.utils import deep_get
 from module.ocr.ocr import Ocr
 from tasks.base.page import page_main
 from tasks.base.ui import UI
-from tasks.login.assets.assets_login import LOGIN_CHOOSE_ACCOUNT, LOGIN_CONFIRM, LOGIN_LOADING, LOGOUT_COMFIRM, SWITCH_LOGIN, USER_AGREEMENT_ACCEPT, LOGOUT_ACCOUNT_LOGOUT, GAME_INFO
+from tasks.login.assets.assets_login import *
 from tasks.login.cloud import LoginAndroidCloud, XPath
 from tasks.login.ui import switchAccount
 
@@ -132,6 +132,8 @@ class Login(switchAccount, UI, LoginAndroidCloud):
                 login_success = True
                 continue
             if self.appear_then_click(USER_AGREEMENT_ACCEPT):
+                continue
+            if self.appear_then_click(ACCOUNT_CONFIRM):
                 continue
             # Additional
             if self.handle_popup_single():
