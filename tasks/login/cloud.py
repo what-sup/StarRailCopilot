@@ -385,6 +385,13 @@ class LoginAndroidCloud(ModuleBase):
             self._cloud_get_remain()
             self._cloud_enter()
             return True
+        elif self.appear(XPath.GET_REWARD):
+            # Should be prior than is_in_cloud_page()
+            logger.info('Cloud game is at GET_REWARD')
+            self._cloud_start()
+            self._cloud_get_remain()
+            self._cloud_enter()
+            return True
         elif self.is_in_cloud_page():
             logger.info('Cloud game is in game')
             return True
@@ -406,6 +413,9 @@ class LoginAndroidCloud(ModuleBase):
         if self.appear(XPath.START_GAME):
             logger.info('Cloud game is in main page')
             return True
+        if self.appear(XPath.GET_REWARD):
+            logger.info('Cloud game is at GET_REWARD')
+            return True
         if self.appear(XPath.FLOAT_DELAY):
             logger.info('Cloud game is in game with float window expanded')
             return True
@@ -414,9 +424,6 @@ class LoginAndroidCloud(ModuleBase):
             return True
         if self.appear(XPath.ACCOUNT_LOGIN):
             logger.info('Cloud game is at ACCOUNT_LOGIN')
-            return True
-        if self.appear(XPath.GET_REWARD):
-            logger.info('Cloud game is at GET_REWARD')
             return True
 
         logger.info('Not in cloud page')
